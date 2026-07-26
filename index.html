@@ -298,8 +298,21 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
   html{scroll-behavior:auto}
 }
 :focus-visible{outline:2px solid var(--amber); outline-offset:3px; border-radius:6px}
+
+/* svg icons (design system: line icons, no emoji) */
+.vcard .ic{color:var(--amber-soft)}
+.vcard .ic svg{width:23px; height:23px}
+.bcard h3{display:flex; align-items:center; gap:9px}
+.bcard h3 svg{width:18px; height:18px; flex:none; color:var(--amber)}
+
+/* skip link */
+.skip{position:absolute; left:12px; top:-60px; z-index:100; padding:10px 18px; border-radius:0 0 10px 10px;
+  font-family:var(--ff-cond); text-transform:uppercase; letter-spacing:.14em; font-size:.82rem; font-weight:600;
+  color:var(--ground); background:var(--amber); transition:top .2s}
+.skip:focus{top:0}
 </style>
 
+<a class="skip" href="#main">Saltar al contenido</a>
 <div class="grain" aria-hidden="true"></div>
 
 <!-- TOP BAR -->
@@ -313,6 +326,7 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
   </div>
 </div>
 
+<main id="main">
 <!-- HERO -->
 <header class="hero">
   <div class="hero-bg" aria-hidden="true"></div>
@@ -373,12 +387,12 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
     <p class="lead">Las marcas aliadas se integran al festival mediante activaciones, sampling, zonas temáticas y hospitality: presencia visual, física y digital en los momentos reales de consumo y disfrute del público.</p>
 
     <div class="grid g3" style="margin-top:30px">
-      <div class="vcard"><div class="ic">🍺</div><h3>Recordación y afinidad real</h3><p>La marca está presente en los momentos de consumo y experiencia. Más que vista, será usada, recordada y asociada directamente con el buen momento.</p></div>
-      <div class="vcard"><div class="ic">📈</div><h3>Uso, preferencia y categoría</h3><p>Contacto directo con el producto en un entorno social auténtico —música, entretenimiento y disfrute— que impulsa hábitos, preferencia y posicionamiento frente a la competencia.</p></div>
-      <div class="vcard"><div class="ic">📡</div><h3>Visibilidad multicanal</h3><p>Pantallas y escenarios, aftermovie y reels, material impreso y redes oficiales del evento: visibilidad antes, durante y después del festival.</p></div>
-      <div class="vcard"><div class="ic">🎯</div><h3>Impacto masivo y a escala</h3><p>13.000 asistentes confirmados en el evento especializado más grande del país: alto volumen de contactos reales y efectivos, con activación continua toda la jornada.</p></div>
-      <div class="vcard"><div class="ic">♻️</div><h3>Proyección a futuro</h3><p>El impacto se extiende más allá del evento. Contenido post, menciones digitales y souvenir/producto funcional mantienen la marca presente mucho después del festival.</p></div>
-      <div class="vcard"><div class="ic">🎪</div><h3>Activación experiencial</h3><p>Zona estratégica de activación para interacción directa con miles de asistentes: sampling, dinámicas y experiencias de marca inmersivas.</p></div>
+      <div class="vcard"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h9v9a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V8Z"/><path d="M15 10h2a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-2"/><path d="M8.5 8V6.5a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2V8"/></svg></div><h3>Recordación y afinidad real</h3><p>La marca está presente en los momentos de consumo y experiencia. Más que vista, será usada, recordada y asociada directamente con el buen momento.</p></div>
+      <div class="vcard"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M16 7h5v5"/></svg></div><h3>Uso, preferencia y categoría</h3><p>Contacto directo con el producto en un entorno social auténtico —música, entretenimiento y disfrute— que impulsa hábitos, preferencia y posicionamiento frente a la competencia.</p></div>
+      <div class="vcard"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.24a6 6 0 0 1 0-8.49"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg></div><h3>Visibilidad multicanal</h3><p>Pantallas y escenarios, aftermovie y reels, material impreso y redes oficiales del evento: visibilidad antes, durante y después del festival.</p></div>
+      <div class="vcard"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg></div><h3>Impacto masivo y a escala</h3><p>13.000 asistentes confirmados en el evento especializado más grande del país: alto volumen de contactos reales y efectivos, con activación continua toda la jornada.</p></div>
+      <div class="vcard"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div><h3>Proyección a futuro</h3><p>El impacto se extiende más allá del evento. Contenido post, menciones digitales y souvenir/producto funcional mantienen la marca presente mucho después del festival.</p></div>
+      <div class="vcard"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4L12 3Z"/><path d="M19 14l.6 1.6 1.9.6-1.9.6L19 19l-.6-1.6-1.9-.6 1.9-.6L19 14Z"/></svg></div><h3>Activación experiencial</h3><p>Zona estratégica de activación para interacción directa con miles de asistentes: sampling, dinámicas y experiencias de marca inmersivas.</p></div>
     </div>
 
     <div class="grid g4" style="margin-top:18px">
@@ -422,11 +436,11 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
     <h2 class="sec">13 espacios para <em>protagonizar</em> el festival</h2>
     <p class="lead">Cada producto incluye activación, visibilidad multicanal, costos operativos y logística. Filtra por tipo de espacio y elige dónde quieres que viva tu marca.</p>
     <div class="filters" role="group" aria-label="Filtrar por categoría">
-      <button class="fbtn on" data-f="all">Todos <span style="opacity:.6">13</span></button>
-      <button class="fbtn" data-f="vip">Zonas VIP <span style="opacity:.6">2</span></button>
-      <button class="fbtn" data-f="esc">Escenarios <span style="opacity:.6">4</span></button>
-      <button class="fbtn" data-f="zye">Zonas y Experiencias <span style="opacity:.6">3</span></button>
-      <button class="fbtn" data-f="atr">Atracciones y Carpas <span style="opacity:.6">4</span></button>
+      <button class="fbtn on" data-f="all" aria-pressed="true">Todos <span style="opacity:.6">13</span></button>
+      <button class="fbtn" data-f="vip" aria-pressed="false">Zonas VIP <span style="opacity:.6">2</span></button>
+      <button class="fbtn" data-f="esc" aria-pressed="false">Escenarios <span style="opacity:.6">4</span></button>
+      <button class="fbtn" data-f="zye" aria-pressed="false">Zonas y Experiencias <span style="opacity:.6">3</span></button>
+      <button class="fbtn" data-f="atr" aria-pressed="false">Atracciones y Carpas <span style="opacity:.6">4</span></button>
     </div>
   </div>
 
@@ -715,7 +729,7 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
     <h2 class="sec">Beneficios <em>transversales</em> a todos los paquetes</h2>
     <div class="grid g4" style="margin-top:30px">
       <div class="bcard">
-        <h3>🎟️ Boletería & accesos</h3>
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a2 2 0 0 0 0 4v1a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1a2 2 0 0 0 0-4Z"/><path d="M14 6v12" stroke-dasharray="2 2"/></svg>Boletería &amp; accesos</h3>
         <ul>
           <li><b>Cortesía + kit + vaso</b><span class="v">$142.386</span></li>
           <li><b>Acreditación listado</b><span class="v">$93.800</span></li>
@@ -723,7 +737,7 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
         </ul>
       </div>
       <div class="bcard">
-        <h3>📣 Visibilidad & medios</h3>
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 18-5v12L3 14v-3Z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>Visibilidad &amp; medios</h3>
         <ul>
           <li><b>Post @latomacervecera</b><span class="v">$2.000.000</span></li>
           <li><b>Backing + aftermovie + pantalla</b><span class="v">$2.000.000</span></li>
@@ -731,7 +745,7 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
         </ul>
       </div>
       <div class="bcard">
-        <h3>🏷️ Branding físico</h3>
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13.3 13.3 20a1.6 1.6 0 0 1-2.3 0l-7-7V4h9l7 7a1.6 1.6 0 0 1 0 2.3Z"/><circle cx="7.5" cy="7.5" r="1.3"/></svg>Branding físico</h3>
         <ul>
           <li><b>Mapa oficial</b> en la ruta del asistente</li>
           <li><b>Copa oficial</b> del evento (P8)</li>
@@ -739,7 +753,7 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
         </ul>
       </div>
       <div class="bcard">
-        <h3>⚡ Infraestructura</h3>
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>Infraestructura</h3>
         <ul>
           <li><b>Montaje & logística</b> incluidos</li>
           <li><b>Conexión eléctrica</b> 110V doble</li>
@@ -797,6 +811,7 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
     </div>
   </div>
 </section>
+</main>
 
 <script>
 (function(){
@@ -804,8 +819,8 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
   var cards=document.querySelectorAll('#pgrid .pcard');
   btns.forEach(function(b){
     b.addEventListener('click',function(){
-      btns.forEach(function(x){x.classList.remove('on')});
-      b.classList.add('on');
+      btns.forEach(function(x){x.classList.remove('on'); x.setAttribute('aria-pressed','false')});
+      b.classList.add('on'); b.setAttribute('aria-pressed','true');
       var f=b.getAttribute('data-f');
       cards.forEach(function(c){
         var show = f==='all' || c.getAttribute('data-cat')===f;
