@@ -196,6 +196,17 @@ section{padding:clamp(56px,8vw,110px) 0; position:relative}
   background:linear-gradient(180deg,var(--red),var(--red-line)); color:#fff; font-family:var(--ff-cond);
   text-transform:uppercase; letter-spacing:.16em; font-size:.62rem; font-weight:600; padding:5px 42px;
   box-shadow:0 4px 14px rgba(226,75,58,.4)}
+.pcard.sold{opacity:.66; filter:saturate(.55)}
+.pcard.sold:hover{transform:none; box-shadow:none}
+.pcard.sold::after{content:"Vendido"; position:absolute; top:16px; right:-36px; transform:rotate(45deg); z-index:3;
+  background:linear-gradient(180deg,#7a6d5a,#4d4436); color:var(--cream); font-family:var(--ff-cond);
+  text-transform:uppercase; letter-spacing:.16em; font-size:.62rem; font-weight:600; padding:5px 42px;
+  box-shadow:0 4px 14px rgba(0,0,0,.45)}
+.pcard.sold .resv{pointer-events:none; color:var(--muted); border-color:var(--line); background:transparent}
+.soldtag{font-family:var(--ff-cond); text-transform:uppercase; letter-spacing:.12em; font-size:.6rem; font-weight:600;
+  color:var(--cream-dim); background:rgba(122,109,90,.22); border:1px solid rgba(122,109,90,.5);
+  border-radius:999px; padding:2px 8px; margin-left:8px; vertical-align:middle}
+tbody tr.soldrow td{opacity:.6}
 .pcard .phead{display:flex; align-items:center; justify-content:space-between; gap:12px}
 .pcode{font-family:var(--ff-cond); font-weight:700; font-size:.78rem; letter-spacing:.16em; color:var(--amber);
   border:1px solid var(--line-strong); border-radius:8px; padding:4px 10px}
@@ -628,11 +639,11 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
 
       <!-- P8 -->
       <article class="pcard reveal" data-cat="zye">
-        <div class="phead"><span class="pcode">P8</span><span class="pcat cat-esp">Zona gastronómica</span></div>
-        <h3>Restaurantes</h3>
-        <div class="zone">Alta permanencia · copa oficial</div>
+        <div class="phead"><span class="pcode">P8</span><span class="pcat cat-vip">Zona Lounge VIP</span></div>
+        <h3>Zona Lounge VIP</h3>
+        <div class="zone">Lounge premium · copa oficial</div>
         <div class="price"><span class="cur">$</span><span class="amt">28.700.000</span></div>
-        <p class="desc">Uno de los puntos de mayor tiempo de permanencia del festival. Presencia mientras los asistentes consumen, comparten y disfrutan, con presencia en la copa oficial.</p>
+        <p class="desc">Zona lounge premium de alta permanencia, donde los asistentes descansan, socializan y consumen en un ambiente exclusivo. Incluye presencia en la copa oficial del evento.</p>
         <ul class="incl">
           <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5AC46E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Presencia en la <b>copa oficial</b> del evento</span></li>
           <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5AC46E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Espacio de activación · branding en mobiliario</span></li>
@@ -643,7 +654,7 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
       </article>
 
       <!-- P12 -->
-      <article class="pcard reveal" data-cat="atr">
+      <article class="pcard sold reveal" data-cat="atr">
         <div class="phead"><span class="pcode">P12</span><span class="pcat cat-atr">Atracción principal</span></div>
         <h3>Carros Chocones</h3>
         <div class="zone">Entretenimiento puro</div>
@@ -656,7 +667,7 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
           <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5AC46E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Generador eléctrico incluido</span></li>
         </ul>
         <p class="arg">"Los asistentes asociarán la diversión y la adrenalina directamente con la marca."</p>
-        <div class="foot"><a href="#contacto" class="resv">Reservar P12</a></div>
+        <div class="foot"><span class="resv" aria-disabled="true">Vendido</span></div>
       </article>
 
       <!-- P7 -->
@@ -728,20 +739,20 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
       </article>
 
       <!-- P13 -->
-      <article class="pcard reveal" data-cat="atr">
-        <div class="phead"><span class="pcode">P13</span><span class="pcat cat-atr">Atracción mecánica</span></div>
-        <h3>Atracción Cliper</h3>
-        <div class="zone">Alta convocatoria · adrenalina</div>
+      <article class="pcard sold reveal" data-cat="atr">
+        <div class="phead"><span class="pcode">P13</span><span class="pcat cat-atr">Carpa de ingreso</span></div>
+        <h3>Carpa Ingreso Helles</h3>
+        <div class="zone">Punto de ingreso · marca Helles</div>
         <div class="price"><span class="cur">$</span><span class="amt">13.401.000</span></div>
-        <p class="desc">Brandeo y presencia en una atracción mecánica masiva del festival. Genera recordación lúdica por su carácter de entretenimiento y la repetición de uso del público.</p>
+        <p class="desc">Carpa de ingreso al festival brandeada con tu marca: primer punto de contacto por donde pasan los asistentes al entrar. Alta exposición desde el primer momento.</p>
         <ul class="incl">
-          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5AC46E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Brandeo</b> de la atracción mecánica</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5AC46E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Brandeo</b> completo de la carpa de ingreso</span></li>
           <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5AC46E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>25 cortesías</b> con kit de bienvenida</span></li>
           <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5AC46E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Maneros exclusivos</span></li>
           <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5AC46E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Presencia en mapa oficial del evento</span></li>
         </ul>
         <p class="arg">"Recordación de marca a través de la diversión: entretenimiento masivo con inversión optimizada."</p>
-        <div class="foot"><a href="#contacto" class="resv">Reservar P13</a></div>
+        <div class="foot"><span class="resv" aria-disabled="true">Vendido</span></div>
       </article>
 
     </div>
@@ -777,14 +788,14 @@ tfoot .pr{font-family:var(--ff-body); font-weight:800; color:var(--amber); font-
           <tr class="flagrow"><td class="code">P3</td><td>Escenario IPA</td><td class="zn">Escenario principal</td><td>6×6 m</td><td class="pr">$46.500.000</td></tr>
           <tr><td class="code">P4</td><td>Escenario Stout</td><td class="zn">Escenario Rock</td><td>4×4 m</td><td class="pr">$35.800.000</td></tr>
           <tr><td class="code">P6</td><td>Escenario Amber</td><td class="zn">Escenario Bosque</td><td>6×12 m</td><td class="pr">$33.700.000</td></tr>
-          <tr><td class="code">P12</td><td>Carros Chocones</td><td class="zn">Atracción principal</td><td>Atracción</td><td class="pr">$29.450.000</td></tr>
-          <tr><td class="code">P8</td><td>Restaurantes</td><td class="zn">Zona gastronómica</td><td>Zona</td><td class="pr">$28.700.000</td></tr>
+          <tr class="soldrow"><td class="code">P12</td><td>Carros Chocones <span class="soldtag">Vendido</span></td><td class="zn">Atracción principal</td><td>Atracción</td><td class="pr">$29.450.000</td></tr>
+          <tr><td class="code">P8</td><td>Zona Lounge VIP</td><td class="zn">Lounge premium</td><td>Zona</td><td class="pr">$28.700.000</td></tr>
           <tr><td class="code">P1</td><td>Rock Star VIP IPA</td><td class="zn">Zona VIP exclusiva (+ baños)</td><td>6×6 m</td><td class="pr">$26.800.000</td></tr>
           <tr><td class="code">P5</td><td>Escenario Helles</td><td class="zn">Escenario Urbano</td><td>6×3 m</td><td class="pr">$26.800.000</td></tr>
           <tr><td class="code">P2</td><td>Rock Star VIP Stout</td><td class="zn">Zona VIP</td><td>4×4 m</td><td class="pr">$23.800.000</td></tr>
           <tr><td class="code">P7</td><td>Parqueadero MOVA</td><td class="zn">Acceso / entrada</td><td>12×12 m</td><td class="pr">$14.700.000</td></tr>
           <tr><td class="code">P9</td><td>Lisadero</td><td class="zn">Zona de experiencias</td><td>6×16 m</td><td class="pr">$14.700.000</td></tr>
-          <tr><td class="code">P13</td><td>Atracción Cliper</td><td class="zn">Atracción mecánica</td><td>Atracción</td><td class="pr">$13.401.000</td></tr>
+          <tr class="soldrow"><td class="code">P13</td><td>Carpa Ingreso Helles <span class="soldtag">Vendido</span></td><td class="zn">Carpa de ingreso</td><td>Carpa</td><td class="pr">$13.401.000</td></tr>
           <tr><td class="code">P10</td><td>Carpa Amber</td><td class="zn">Zona temática</td><td>6×6 m</td><td class="pr">$9.900.000</td></tr>
           <tr><td class="code">P11</td><td>Carpa Helles</td><td class="zn">Zona temática</td><td>Carpa</td><td class="pr">$9.900.000</td></tr>
         </tbody>
