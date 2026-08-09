@@ -7,7 +7,10 @@ Piezas verticales 9:16 (1080 × 1920) construidas sobre el **Sistema de Diseño 
 
 | Archivo | Uso |
 |---|---|
-| `historia-boleteria-bogota-2026.png` | Historia de calentamiento previa al lanzamiento de boletería |
+| `historia-boleteria-bogota-2026.png` | Historia previa al lanzamiento de boletería |
+
+La pieza dice cuatro cosas y nada más: **logotipo**, **Bogotá 2026**, **fecha y lugar**,
+**boletas próximamente**. Sin titulares ni cuerpo de texto — la imagen madre hace el resto.
 
 ## Cómo se regenera
 
