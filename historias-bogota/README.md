@@ -12,6 +12,7 @@ Piezas verticales 9:16 (1080 × 1920) construidas sobre el **Sistema de Diseño 
 ## Cómo se regenera
 
 ```bash
+python3 prepare-assets.py            # solo si cambia el logotipo original
 python3 build-historia-boleteria.py
 ```
 
@@ -28,8 +29,12 @@ se toca el script — no el PNG.
 - **Tipografía** — Playfair Display 900 (display, itálica de acento), Barlow (cuerpo),
   Barlow Condensed en mayúscula espaciada (etiquetas).
 - **Iconografía** — lúpulo, cerveza, música y atardecer, trazo simple en oro.
-- **Logotipo** — blackletter sobre plancha crema, con aire alrededor y nunca sobre el cielo
-  brillante sin capa de contraste. La Toma Cervecera aparece como sello productor.
+- **Logotipo** — blackletter en el masthead, sin recuadro ni plancha: `prepare-assets.py`
+  retira el contorno sticker del logo original y lo pinta en Crema Espuma, sin redibujar la
+  letra. Va sobre la zona oscura de la imagen, nunca sobre el cielo brillante. La Toma
+  Cervecera lo encabeza como sello productor.
+- **Ciudad** — «Bogotá 2026» en Barlow Condensed 700 a 112 px como segundo nivel de lectura,
+  justo debajo del logotipo.
 
 ## Zonas seguras de Instagram
 
