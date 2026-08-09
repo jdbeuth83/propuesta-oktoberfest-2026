@@ -4,15 +4,12 @@
 Historia 9:16 (1080x1920) — Oktoberfest Artesanal Bogotá 2026
 Save the date · boletas próximamente.
 
-Solo dos marcas (Oktoberfest Artesanal y La Toma Cervecera) y tres datos:
-save the date, 24 de octubre y boletas próximamente. Sin locación todavía.
-
-Se generan dos variantes:
-  · con-ciudad — mantiene «Bogotá 2026» bajo el logotipo
-  · sin-ciudad — únicamente las dos marcas y los tres datos
+Dos marcas (Oktoberfest Artesanal y La Toma Cervecera), la ciudad —que separa
+esta edición de la de Medellín— y tres datos: save the date, 24 de octubre y
+boletas próximamente. Sin locación todavía.
 
 Construida sobre el Sistema de Diseño Bogotá: imagen madre a la hora dorada,
-paleta del ocaso, Barlow Condensed y logotipo blackletter en monocromo crema.
+paleta del ocaso, Barlow Condensed y el logotipo blackletter original.
 """
 import base64
 import pathlib
@@ -20,12 +17,9 @@ import subprocess
 
 ROOT = pathlib.Path(__file__).resolve().parent
 AS = ROOT / "_assets"
+OUT_HTML = ROOT / "historia-savethedate.html"
+OUT_PNG = ROOT / "historia-savethedate-bogota-2026.png"
 CHROME = "/opt/pw-browsers/chromium"
-
-VARIANTS = [
-    ("con-ciudad", '<div class="city">Bogotá <span>2026</span></div>'),
-    ("sin-ciudad", ""),
-]
 
 
 def data_uri(name, mime):
@@ -33,13 +27,11 @@ def data_uri(name, mime):
 
 
 hero = data_uri("hero-sunset.jpg", "image/jpeg")
-okt = data_uri("okt-logo-crema.png", "image/png")
+okt = data_uri("okt-logo.png", "image/png")
 latoma = data_uri("latoma-blanco.png", "image/png")
 fonts_css = (AS / "fonts.css").read_text(encoding="utf-8")
 
-
-def page(city_block: str) -> str:
-    return f"""<!doctype html>
+HTML = f"""<!doctype html>
 <meta charset="utf-8">
 <title>Historia · Save the date Oktoberfest Artesanal Bogotá 2026</title>
 <style>
@@ -76,9 +68,11 @@ img{{display:block;}}
 
 /* ── Marcas ── */
 .sello{{align-self:flex-start;height:40px;width:auto;opacity:.92;}}
-.brand{{align-self:flex-start;width:560px;height:auto;margin-top:36px;
-  filter:drop-shadow(0 8px 30px rgba(0,0,0,.75));}}
-.city{{margin-top:26px;font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:700;
+/* Logotipo original: azul + café con su contorno blanco. La sombra solo lo
+   despega de la foto, no reemplaza al contorno. */
+.brand{{align-self:flex-start;width:560px;height:auto;margin-top:30px;
+  filter:drop-shadow(0 10px 30px rgba(0,0,0,.55));}}
+.city{{margin-top:22px;font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:700;
   font-size:112px;line-height:.9;letter-spacing:.085em;text-transform:uppercase;color:var(--gold);
   text-shadow:0 6px 34px rgba(0,0,0,.6);}}
 .city span{{color:var(--cream);}}
@@ -102,14 +96,14 @@ img{{display:block;}}
 </style>
 
 <div class="stage">
-  <div class="photo"><img src="{hero}" alt="Festival Oktoberfest Artesanal a la hora dorada"></div>
+  <div class="photo"><img src="{hero}" alt="Festival Oktoberfest Artesanal Bogotá a la hora dorada"></div>
   <div class="glow"></div>
   <div class="veil"></div>
 
   <div class="in">
     <img class="sello" src="{latoma}" alt="La Toma Cervecera">
     <img class="brand" src="{okt}" alt="Oktoberfest Artesanal">
-    {city_block}
+    <div class="city">Bogotá <span>2026</span></div>
 
     <div class="foot">
       <div class="rule"></div>
@@ -122,14 +116,12 @@ img{{display:block;}}
 </div>
 """
 
+OUT_HTML.write_text(HTML, encoding="utf-8")
+print(f"HTML  {OUT_HTML.name}  {OUT_HTML.stat().st_size/1024:.0f} KB")
 
-for slug, city_block in VARIANTS:
-    out_html = ROOT / f"historia-savethedate-{slug}.html"
-    out_png = ROOT / f"historia-savethedate-{slug}.png"
-    out_html.write_text(page(city_block), encoding="utf-8")
-    subprocess.run([
-        CHROME, "--headless", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
-        "--force-device-scale-factor=1", "--window-size=1080,1920",
-        "--virtual-time-budget=6000", f"--screenshot={out_png}", out_html.as_uri(),
-    ], check=True, capture_output=True)
-    print(f"{out_png.name}  {out_png.stat().st_size/1024:.0f} KB")
+subprocess.run([
+    CHROME, "--headless", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
+    "--force-device-scale-factor=1", "--window-size=1080,1920",
+    "--virtual-time-budget=6000", f"--screenshot={OUT_PNG}", OUT_HTML.as_uri(),
+], check=True, capture_output=True)
+print(f"PNG   {OUT_PNG.name}  {OUT_PNG.stat().st_size/1024:.0f} KB")

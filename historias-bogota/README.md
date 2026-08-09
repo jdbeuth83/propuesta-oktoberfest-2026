@@ -7,36 +7,37 @@ Piezas verticales 9:16 (1080 × 1920) construidas sobre el **Sistema de Diseño 
 
 | Archivo | Uso |
 |---|---|
-| `historia-savethedate-con-ciudad.png` | Save the date · mantiene «Bogotá 2026» bajo el logotipo |
-| `historia-savethedate-sin-ciudad.png` | Save the date · solo las dos marcas y los tres datos |
+| `historia-savethedate-bogota-2026.png` | Save the date previo al lanzamiento de boletería |
 
-Ambas dicen lo mismo: **Oktoberfest Artesanal**, **La Toma Cervecera**, **Save the date ·
-24 de octubre** y **Boletas próximamente**. Sin locación todavía, sin titulares y sin cuerpo
-de texto — la imagen madre hace el resto.
+Dice cinco cosas: **Oktoberfest Artesanal**, **La Toma Cervecera**, **Bogotá 2026**,
+**Save the date · 24 de octubre** y **Boletas próximamente**. Sin locación todavía, sin
+titulares y sin cuerpo de texto — la imagen madre hace el resto.
+
+La ciudad es obligatoria en toda pieza: el festival también corre en Medellín y «Bogotá 2026»
+es lo que separa una edición de la otra de un vistazo.
 
 ## Cómo se regenera
 
 ```bash
-python3 prepare-assets.py               # solo si cambia el logotipo original
-python3 build-historia-savethedate.py   # genera las dos variantes
+python3 build-historia-savethedate.py
 ```
 
-Cada variante escribe su HTML autocontenido (fuentes e imágenes en base64) y se renderiza a
-PNG con el Chromium headless del entorno. Para editar el copy o el encuadre se toca el
-script — no el PNG.
+Escribe `historia-savethedate.html` (autocontenido, fuentes e imágenes en base64) y lo
+renderiza a PNG con el Chromium headless del entorno. Para editar el copy o el encuadre se
+toca el script — no el PNG.
 
 ## Fidelidad al sistema
 
 - **Imagen madre** — la toma aérea del festival a la hora dorada (`_assets/hero-sunset.jpg`,
   derivada de `hero-okt-sunset-v1.png` del sistema).
-- **Paleta del ocaso** — Ocaso Oro `#E9A72C` en la etiqueta y la píldora, Crema Espuma
-  `#EEE7D6` en la fecha, Noche Festival `#14110B` de fondo.
-- **Tipografía** — Barlow Condensed 700 en mayúscula espaciada para fecha y etiquetas; el
-  logotipo blackletter es la firma de marca y nunca se reescribe.
-- **Logotipo** — sin recuadro ni plancha: `prepare-assets.py` retira el contorno sticker del
-  logo original y lo pinta en Crema Espuma, sin redibujar la letra. Va sobre la zona oscura
-  de la imagen, nunca sobre el cielo brillante. La Toma Cervecera lo encabeza como sello
-  productor.
+- **Paleta del ocaso** — Ocaso Oro `#E9A72C` en la ciudad, la etiqueta y la píldora; Crema
+  Espuma `#EEE7D6` en la fecha; Noche Festival `#14110B` de fondo.
+- **Tipografía** — Barlow Condensed 700 en mayúscula espaciada para ciudad, fecha y
+  etiquetas. El logotipo blackletter es la firma de marca y nunca se reescribe.
+- **Logotipo** — el original tal cual: blackletter azul + café con su contorno blanco, sin
+  recuadro ni plancha. El contorno le da todo el contraste que necesita sobre la noche del
+  festival; la sombra suave solo lo despega de la foto. La Toma Cervecera lo encabeza como
+  sello productor.
 
 ## Zonas seguras de Instagram
 
