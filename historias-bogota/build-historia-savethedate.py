@@ -2,11 +2,17 @@
 # -*- coding: utf-8 -*-
 """
 Historia 9:16 (1080x1920) — Oktoberfest Artesanal Bogotá 2026
-Anuncio de boletería próximamente.
+Save the date · boletas próximamente.
 
-Cuatro datos y nada más: logotipo, ciudad, fecha y lugar, boletas próximamente.
+Solo dos marcas (Oktoberfest Artesanal y La Toma Cervecera) y tres datos:
+save the date, 24 de octubre y boletas próximamente. Sin locación todavía.
+
+Se generan dos variantes:
+  · con-ciudad — mantiene «Bogotá 2026» bajo el logotipo
+  · sin-ciudad — únicamente las dos marcas y los tres datos
+
 Construida sobre el Sistema de Diseño Bogotá: imagen madre a la hora dorada,
-paleta del ocaso, Playfair/Barlow y logotipo blackletter en monocromo crema.
+paleta del ocaso, Barlow Condensed y logotipo blackletter en monocromo crema.
 """
 import base64
 import pathlib
@@ -14,9 +20,12 @@ import subprocess
 
 ROOT = pathlib.Path(__file__).resolve().parent
 AS = ROOT / "_assets"
-OUT_HTML = ROOT / "historia-boleteria.html"
-OUT_PNG = ROOT / "historia-boleteria-bogota-2026.png"
 CHROME = "/opt/pw-browsers/chromium"
+
+VARIANTS = [
+    ("con-ciudad", '<div class="city">Bogotá <span>2026</span></div>'),
+    ("sin-ciudad", ""),
+]
 
 
 def data_uri(name, mime):
@@ -28,9 +37,11 @@ okt = data_uri("okt-logo-crema.png", "image/png")
 latoma = data_uri("latoma-blanco.png", "image/png")
 fonts_css = (AS / "fonts.css").read_text(encoding="utf-8")
 
-HTML = f"""<!doctype html>
+
+def page(city_block: str) -> str:
+    return f"""<!doctype html>
 <meta charset="utf-8">
-<title>Historia · Boletería Oktoberfest Artesanal Bogotá 2026</title>
+<title>Historia · Save the date Oktoberfest Artesanal Bogotá 2026</title>
 <style>
 {fonts_css}
 :root{{
@@ -53,7 +64,7 @@ img{{display:block;}}
 .photo img{{width:100%;height:100%;object-fit:cover;object-position:55% center;
   filter:saturate(1.08) contrast(1.04);}}
 
-/* Calor del ocaso + velos de contraste, ahora mínimos: hay poca tipografía */
+/* Calor del ocaso + velos de contraste, mínimos: hay muy poca tipografía */
 .glow{{position:absolute;inset:0;
   background:radial-gradient(58% 24% at 40% 41%,rgba(244,196,90,.24),transparent 72%);}}
 .veil{{position:absolute;inset:0;background:
@@ -63,7 +74,7 @@ img{{display:block;}}
 .in{{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;
   padding:186px 78px 250px;}}
 
-/* ── Masthead: sello productor · logotipo · ciudad ── */
+/* ── Marcas ── */
 .sello{{align-self:flex-start;height:40px;width:auto;opacity:.92;}}
 .brand{{align-self:flex-start;width:560px;height:auto;margin-top:36px;
   filter:drop-shadow(0 8px 30px rgba(0,0,0,.75));}}
@@ -72,15 +83,16 @@ img{{display:block;}}
   text-shadow:0 6px 34px rgba(0,0,0,.6);}}
 .city span{{color:var(--cream);}}
 
-/* ── Cierre: cuándo, dónde y boletas ── */
+/* ── Cierre: save the date y boletas ── */
 .foot{{margin-top:auto;}}
 .rule{{width:132px;height:3px;background:var(--gold);border-radius:2px;}}
-.when{{margin-top:30px;font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:700;
-  font-size:84px;line-height:1;letter-spacing:.055em;text-transform:uppercase;color:var(--cream);
-  text-shadow:0 5px 30px rgba(0,0,0,.8);}}
-.where{{margin-top:14px;font-size:35px;line-height:1.25;color:#E4DCC8;
-  text-shadow:0 3px 20px rgba(0,0,0,.8);}}
-.tickets{{margin-top:40px;display:inline-flex;align-items:center;
+.kicker{{margin-top:28px;font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:600;
+  font-size:30px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);
+  text-shadow:0 3px 18px rgba(0,0,0,.8);}}
+.when{{margin-top:16px;font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:700;
+  font-size:96px;line-height:1;letter-spacing:.05em;text-transform:uppercase;color:var(--cream);
+  text-shadow:0 5px 30px rgba(0,0,0,.85);}}
+.tickets{{margin-top:44px;display:inline-flex;align-items:center;
   background:var(--gold);color:#2A1B06;border-radius:999px;padding:24px 40px;
   box-shadow:0 22px 54px -18px rgba(233,167,44,.95);}}
 .tickets span{{font-family:'Barlow Condensed',Barlow,sans-serif;font-size:34px;font-weight:700;
@@ -90,19 +102,19 @@ img{{display:block;}}
 </style>
 
 <div class="stage">
-  <div class="photo"><img src="{hero}" alt="Festival Oktoberfest Artesanal Bogotá a la hora dorada"></div>
+  <div class="photo"><img src="{hero}" alt="Festival Oktoberfest Artesanal a la hora dorada"></div>
   <div class="glow"></div>
   <div class="veil"></div>
 
   <div class="in">
     <img class="sello" src="{latoma}" alt="La Toma Cervecera">
     <img class="brand" src="{okt}" alt="Oktoberfest Artesanal">
-    <div class="city">Bogotá <span>2026</span></div>
+    {city_block}
 
     <div class="foot">
       <div class="rule"></div>
+      <div class="kicker">Save the date</div>
       <div class="when">24 de octubre</div>
-      <p class="where">Centro de Eventos CESAP</p>
       <div class="tickets"><span>Boletas próximamente</span></div>
       <div class="handle">@oktoberfestartesanalbog</div>
     </div>
@@ -110,12 +122,14 @@ img{{display:block;}}
 </div>
 """
 
-OUT_HTML.write_text(HTML, encoding="utf-8")
-print(f"HTML  {OUT_HTML.name}  {OUT_HTML.stat().st_size/1024:.0f} KB")
 
-subprocess.run([
-    CHROME, "--headless", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
-    "--force-device-scale-factor=1", "--window-size=1080,1920",
-    "--virtual-time-budget=6000", f"--screenshot={OUT_PNG}", OUT_HTML.as_uri(),
-], check=True, capture_output=True)
-print(f"PNG   {OUT_PNG.name}  {OUT_PNG.stat().st_size/1024:.0f} KB")
+for slug, city_block in VARIANTS:
+    out_html = ROOT / f"historia-savethedate-{slug}.html"
+    out_png = ROOT / f"historia-savethedate-{slug}.png"
+    out_html.write_text(page(city_block), encoding="utf-8")
+    subprocess.run([
+        CHROME, "--headless", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
+        "--force-device-scale-factor=1", "--window-size=1080,1920",
+        "--virtual-time-budget=6000", f"--screenshot={out_png}", out_html.as_uri(),
+    ], check=True, capture_output=True)
+    print(f"{out_png.name}  {out_png.stat().st_size/1024:.0f} KB")
