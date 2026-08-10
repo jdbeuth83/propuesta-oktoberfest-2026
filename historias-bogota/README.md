@@ -7,7 +7,8 @@ Piezas verticales 9:16 (1080 × 1920) construidas sobre el **Sistema de Diseño 
 
 | Archivo | Uso |
 |---|---|
-| `historia-savethedate-bogota-2026.png` | Save the date previo al lanzamiento de boletería |
+| `historia-savethedate-centrado.png` | Save the date · eje simétrico, lectura de afiche |
+| `historia-savethedate-izquierda.png` | Save the date · eje editorial alineado al margen |
 
 Dice cinco cosas: **Oktoberfest Artesanal**, **La Toma Cervecera**, **Bogotá 2026**,
 **Save the date · 24 de octubre** y **Boletas próximamente**. Sin locación todavía, sin
@@ -19,11 +20,11 @@ es lo que separa una edición de la otra de un vistazo.
 ## Cómo se regenera
 
 ```bash
-python3 build-historia-savethedate.py
+python3 build-historia-savethedate.py   # genera los dos ejes
 ```
 
-Escribe `historia-savethedate.html` (autocontenido, fuentes e imágenes en base64) y lo
-renderiza a PNG con el Chromium headless del entorno. Para editar el copy o el encuadre se
+Cada eje escribe su HTML autocontenido (fuentes e imágenes en base64) y se renderiza a PNG
+con el Chromium headless del entorno. Para editar el copy o el encuadre se
 toca el script — no el PNG.
 
 ## Fidelidad al sistema
@@ -36,8 +37,9 @@ toca el script — no el PNG.
   etiquetas. El logotipo blackletter es la firma de marca y nunca se reescribe.
 - **Logotipo** — el original tal cual: blackletter azul + café con su contorno blanco, sin
   recuadro ni plancha. El contorno le da todo el contraste que necesita sobre la noche del
-  festival; la sombra suave solo lo despega de la foto. La Toma Cervecera lo encabeza como
-  sello productor.
+  festival; la sombra suave solo lo despega de la foto.
+- **Sello productor** — La Toma Cervecera encabeza el masthead a 74 px de alto, al doble del
+  tamaño con el que arrancó la pieza.
 
 ## Zonas seguras de Instagram
 

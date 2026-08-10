@@ -8,6 +8,10 @@ Dos marcas (Oktoberfest Artesanal y La Toma Cervecera), la ciudad —que separa
 esta edición de la de Medellín— y tres datos: save the date, 24 de octubre y
 boletas próximamente. Sin locación todavía.
 
+Se generan dos ejes de composición:
+  · centrado  — eje simétrico, lectura de afiche
+  · izquierda — eje editorial, todo alineado al margen
+
 Construida sobre el Sistema de Diseño Bogotá: imagen madre a la hora dorada,
 paleta del ocaso, Barlow Condensed y el logotipo blackletter original.
 """
@@ -17,9 +21,9 @@ import subprocess
 
 ROOT = pathlib.Path(__file__).resolve().parent
 AS = ROOT / "_assets"
-OUT_HTML = ROOT / "historia-savethedate.html"
-OUT_PNG = ROOT / "historia-savethedate-bogota-2026.png"
 CHROME = "/opt/pw-browsers/chromium"
+
+VARIANTS = [("centrado", True), ("izquierda", False)]
 
 
 def data_uri(name, mime):
@@ -31,7 +35,13 @@ okt = data_uri("okt-logo.png", "image/png")
 latoma = data_uri("latoma-blanco.png", "image/png")
 fonts_css = (AS / "fonts.css").read_text(encoding="utf-8")
 
-HTML = f"""<!doctype html>
+
+def page(centered: bool) -> str:
+    axis = "center" if centered else "flex-start"
+    align = "center" if centered else "left"
+    # El eje centrado deja la fecha sobre la carpa: pide un poco más de velo abajo.
+    bottom_veil = "rgba(10,6,2,.48) 34%" if centered else "rgba(10,6,2,.40) 33%"
+    return f"""<!doctype html>
 <meta charset="utf-8">
 <title>Historia · Save the date Oktoberfest Artesanal Bogotá 2026</title>
 <style>
@@ -61,16 +71,17 @@ img{{display:block;}}
   background:radial-gradient(58% 24% at 40% 41%,rgba(244,196,90,.24),transparent 72%);}}
 .veil{{position:absolute;inset:0;background:
   linear-gradient(180deg,rgba(20,17,11,.94) 0%,rgba(20,17,11,.60) 20%,rgba(20,17,11,.10) 36%,transparent 46%),
-  linear-gradient(0deg,rgba(10,6,2,.96) 0%,rgba(10,6,2,.86) 16%,rgba(10,6,2,.40) 33%,transparent 48%);}}
+  linear-gradient(0deg,rgba(10,6,2,.96) 0%,rgba(10,6,2,.86) 16%,{bottom_veil},transparent 48%);}}
 
 .in{{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;
-  padding:186px 78px 250px;}}
+  align-items:{axis};text-align:{align};padding:186px 78px 250px;}}
 
 /* ── Marcas ── */
-.sello{{align-self:flex-start;height:40px;width:auto;opacity:.92;}}
+.sello{{height:74px;width:auto;opacity:.95;
+  filter:drop-shadow(0 6px 22px rgba(0,0,0,.6));}}
 /* Logotipo original: azul + café con su contorno blanco. La sombra solo lo
    despega de la foto, no reemplaza al contorno. */
-.brand{{align-self:flex-start;width:560px;height:auto;margin-top:30px;
+.brand{{width:600px;height:auto;margin-top:34px;
   filter:drop-shadow(0 10px 30px rgba(0,0,0,.55));}}
 .city{{margin-top:22px;font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:700;
   font-size:112px;line-height:.9;letter-spacing:.085em;text-transform:uppercase;color:var(--gold);
@@ -78,7 +89,7 @@ img{{display:block;}}
 .city span{{color:var(--cream);}}
 
 /* ── Cierre: save the date y boletas ── */
-.foot{{margin-top:auto;}}
+.foot{{margin-top:auto;display:flex;flex-direction:column;align-items:{axis};}}
 .rule{{width:132px;height:3px;background:var(--gold);border-radius:2px;}}
 .kicker{{margin-top:28px;font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:600;
   font-size:30px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);
@@ -116,12 +127,14 @@ img{{display:block;}}
 </div>
 """
 
-OUT_HTML.write_text(HTML, encoding="utf-8")
-print(f"HTML  {OUT_HTML.name}  {OUT_HTML.stat().st_size/1024:.0f} KB")
 
-subprocess.run([
-    CHROME, "--headless", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
-    "--force-device-scale-factor=1", "--window-size=1080,1920",
-    "--virtual-time-budget=6000", f"--screenshot={OUT_PNG}", OUT_HTML.as_uri(),
-], check=True, capture_output=True)
-print(f"PNG   {OUT_PNG.name}  {OUT_PNG.stat().st_size/1024:.0f} KB")
+for slug, centered in VARIANTS:
+    out_html = ROOT / f"historia-savethedate-{slug}.html"
+    out_png = ROOT / f"historia-savethedate-{slug}.png"
+    out_html.write_text(page(centered), encoding="utf-8")
+    subprocess.run([
+        CHROME, "--headless", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
+        "--force-device-scale-factor=1", "--window-size=1080,1920",
+        "--virtual-time-budget=6000", f"--screenshot={out_png}", out_html.as_uri(),
+    ], check=True, capture_output=True)
+    print(f"{out_png.name}  {out_png.stat().st_size/1024:.0f} KB")
