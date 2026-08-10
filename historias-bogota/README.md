@@ -1,16 +1,17 @@
-# Historias · Oktoberfest Artesanal Bogotá 2026
+# Save the date · Oktoberfest Artesanal Bogotá 2026
 
-Piezas verticales 9:16 (1080 × 1920) construidas sobre el **Sistema de Diseño Bogotá**
+Piezas para redes construidas sobre el **Sistema de Diseño Bogotá**
 (`jdbeuth83/oktoberfest-bogota` → `design-system-bogota.html`).
 
 ## Piezas
 
-| Archivo | Uso |
-|---|---|
-| `historia-savethedate-centrado.png` | Save the date · eje simétrico, lectura de afiche |
-| `historia-savethedate-izquierda.png` | Save the date · eje editorial alineado al margen |
+| Archivo | Formato | Uso |
+|---|---|---|
+| `savethedate-post-4x5.png` | 1080 × 1350 | Post de feed — formato principal |
+| `savethedate-post-1x1.png` | 1080 × 1080 | Post de feed cuadrado |
+| `savethedate-historia-9x16.png` | 1080 × 1920 | Historia |
 
-Dice cinco cosas: **Oktoberfest Artesanal**, **La Toma Cervecera**, **Bogotá 2026**,
+Las tres dicen lo mismo: **Oktoberfest Artesanal**, **La Toma Cervecera**, **Bogotá 2026**,
 **Save the date · 24 de octubre** y **Boletas próximamente**. Sin locación todavía, sin
 titulares y sin cuerpo de texto — la imagen madre hace el resto.
 
@@ -20,12 +21,19 @@ es lo que separa una edición de la otra de un vistazo.
 ## Cómo se regenera
 
 ```bash
-python3 build-historia-savethedate.py   # genera los dos ejes
+python3 build-savethedate.py   # los tres formatos de una
 ```
 
-Cada eje escribe su HTML autocontenido (fuentes e imágenes en base64) y se renderiza a PNG
-con el Chromium headless del entorno. Para editar el copy o el encuadre se
-toca el script — no el PNG.
+Cada formato escribe su HTML autocontenido (fuentes e imágenes en base64) y se renderiza a
+PNG. Para editar el copy, la escala o el encuadre se toca el script — no el PNG.
+
+Dos detalles del render que conviene no perder:
+
+- Se usa `headless_shell`, no el Chromium completo. En modo headless el Chromium deja un
+  viewport ~87 px más bajo que la ventana pedida y recorta el borde inferior del lienzo sin
+  avisar. El build verifica el tamaño exacto y falla si aparece franja negra al pie.
+- El eje de composición está en `CENTERED`. En `True` queda centrado (lectura de afiche); en
+  `False` se alinea al margen izquierdo.
 
 ## Fidelidad al sistema
 
@@ -38,10 +46,15 @@ toca el script — no el PNG.
 - **Logotipo** — el original tal cual: blackletter azul + café con su contorno blanco, sin
   recuadro ni plancha. El contorno le da todo el contraste que necesita sobre la noche del
   festival; la sombra suave solo lo despega de la foto.
-- **Sello productor** — La Toma Cervecera encabeza el masthead a 74 px de alto, al doble del
-  tamaño con el que arrancó la pieza.
+- **Sello productor** — La Toma Cervecera encabeza el masthead, escalado por formato.
+- **Encuadre** — la foto es apaisada, así que cada formato corre el recorte a la derecha lo
+  suficiente para no cortar el inflable de cerveza por la mitad. En 9:16 el borde superior de
+  la foto se funde contra la noche; en feed va a sangre completa —si se fundiera, el atardecer
+  se perdería justo en esa zona— y el contraste lo pone el velo, la capa que el sistema exige
+  antes de poner tipografía sobre el cielo.
 
 ## Zonas seguras de Instagram
 
-Márgenes de 186 px arriba y 250 px abajo para que ni el header ni la barra de respuesta
-tapen el sello productor, la fecha ni el handle.
+La historia lleva márgenes de 186 px arriba y 250 px abajo para que ni el header ni la barra
+de respuesta tapen el sello productor, la fecha ni el handle. Los posts de feed no llevan
+interfaz encima, así que usan márgenes parejos.
