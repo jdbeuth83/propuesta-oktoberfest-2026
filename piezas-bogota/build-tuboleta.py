@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Piezas para publicar el Oktoberfest Artesanal Bogotá 2026 en Tuboleta.
+Piezas para la ficha de venta del Oktoberfest Artesanal Bogotá 2026 en Tuboleta.
 
-Genera exactamente los formatos que exige el «Manual de piezas para publicar
-eventos en Tuboleta»: banner desplegable, imagen del evento, boleta digital,
-recurso banner, recurso plano, galería, redes (post/story) y el logo en blanco
-y negro. Todas en JPG <500 KB a 72 dpi (galería <1 MB), salvo el logo (PNG).
+Genera los formatos que exige el «Manual de piezas para publicar eventos en
+Tuboleta». A diferencia del save the date, estas piezas son de la PLATAFORMA DE
+VENTA: informativas, sin llamado a la acción. Comunican evento, ciudad, fecha,
+lugar y los pilares del festival (+40 cervecerías, bandas en vivo, gastronomía y
+talento local), más el código PULEP en todas las piezas.
 
-Mismo Sistema de Diseño Bogotá que el save the date: imagen madre a la hora
-dorada, paleta del ocaso, Barlow Condensed y el logotipo blackletter original.
-Tres ejes de composición: stack (vertical/cuadrado), banner (apaisado) y strip
-(franja 1920×150). La imagen del evento mantiene el diseño dentro de la caja
-segura de 700×720 usando padding (100 lateral, 40 arriba/abajo sobre 900×800).
+Mismo Sistema de Diseño Bogotá: imagen madre a la hora dorada, paleta del ocaso,
+Barlow Condensed y el logotipo blackletter en alta resolución (con contorno
+blanco para fondos oscuros). Tres ejes de composición: stack, banner y strip.
+
+Todas en JPG <500 KB a 72 dpi (galería <1 MB); el logo del ticket en PNG.
 """
 import base64
 import pathlib
@@ -20,12 +21,18 @@ import subprocess
 
 from PIL import Image, ImageOps
 
+# Assets: imagen madre y La Toma del repo; logo Oktoberfest hi-res derivado del
+# design system (assets/okt-logo-hires.png, generado por make-logos.py).
 ROOT = pathlib.Path(__file__).resolve().parent
-AS = ROOT / "_assets"
+REPO_AS = ROOT / "_assets"
+WORK_AS = ROOT / "_assets"
 OUT = ROOT / "renders" / "tuboleta-plataforma"
 BUILD = OUT / ".build"
 
-PULEP = ""  # las boletas aún no salen a la venta: sin registro asignado todavía
+PULEP = "IZP513"
+DATE = "Sábado 24 de octubre"
+PLACE = "Centro de Eventos CESAP"
+FEATS = ["+40 Cervecerías", "Bandas en vivo", "Gastronomía", "Talento local"]
 MAX_KB = 500
 MAX_KB_GALLERY = 1024
 
@@ -45,54 +52,44 @@ CHROME = find_chrome()
 NEW_HEADLESS = "headless_shell" not in CHROME
 
 
-def data_uri(name: str, mime: str) -> str:
-    return f"data:{mime};base64,{base64.b64encode((AS / name).read_bytes()).decode()}"
+def data_uri(path: pathlib.Path, mime: str) -> str:
+    return f"data:{mime};base64,{base64.b64encode(path.read_bytes()).decode()}"
 
 
-HERO = data_uri("hero-sunset.jpg", "image/jpeg")
-OKT = data_uri("okt-logo.png", "image/png")
-LATOMA = data_uri("latoma-blanco.png", "image/png")
-FONTS_CSS = (AS / "fonts.css").read_text(encoding="utf-8")
+HERO = data_uri(REPO_AS / "hero-sunset.jpg", "image/jpeg")
+OKT = data_uri(WORK_AS / "okt-logo-hires.png", "image/png")
+LATOMA = data_uri(REPO_AS / "latoma-blanco.png", "image/png")
+FONTS_CSS = (REPO_AS / "fonts.css").read_text(encoding="utf-8")
 
 
 FORMATS = [
     dict(group="banner-desplegable", slug="desktop-1920x150", w=1920, h=150,
-         mode="strip", objpos="center 32%",
-         sello=0, brand=104, city=42, kicker=0, when=40, pill=22,
-         pill_pad="12px 26px", handle=0),
+         mode="strip", pad=(20, 66, 20), objpos="center 32%",
+         brand=118, city=40, when=34, handle=15),
     dict(group="banner-desplegable", slug="mobile-1920x710", w=1920, h=710,
-         mode="banner", pad=(84, 120, 84), objpos="center 30%",
-         sello=48, brand=470, city=86, kicker=23, when=78, pill=29,
-         pill_pad="19px 34px", handle=20),
-    # Imagen del evento: lienzo 900×800, caja segura 700×720 vía padding.
+         mode="banner", pad=(74, 120, 74), objpos="center 30%",
+         sello=46, brand=480, city=84, when=70, handle=20),
     dict(group="imagen-evento", slug="imagen-evento-900x800", w=900, h=800,
-         mode="stack", pad=(40, 100, 40), objpos="60% center",
-         sello=46, brand=380, city=70, kicker=20, when=60, pill=24,
-         pill_pad="15px 26px", handle=17),
+         mode="stack", pad=(38, 92, 38), objpos="60% center",
+         sello=44, brand=400, city=66, when=54, handle=17),
     dict(group="boleta-digital", slug="boleta-digital-900x1050", w=900, h=1050,
-         mode="stack", pad=(80, 92, 80), objpos="58% center",
-         sello=50, brand=430, city=78, kicker=23, when=66, pill=26,
-         pill_pad="17px 30px", handle=19),
+         mode="stack", pad=(74, 88, 74), objpos="58% center",
+         sello=50, brand=440, city=74, when=60, handle=19),
     dict(group="recurso-banner", slug="recurso-banner-1000x400", w=1000, h=400,
-         mode="banner", pad=(46, 64, 46), objpos="center 34%",
-         sello=32, brand=300, city=54, kicker=16, when=50, pill=19,
-         pill_pad="12px 22px", handle=None),
+         mode="banner", pad=(42, 60, 42), objpos="center 34%",
+         sello=32, brand=320, city=52, when=46, handle=15),
     dict(group="recurso-plano", slug="recurso-plano-1080x1080", w=1080, h=1080,
-         mode="stack", pad=(84, 96, 84), objpos="72% center",
-         sello=56, brand=470, city=84, kicker=24, when=72, pill=28,
-         pill_pad="19px 32px", handle=21),
+         mode="stack", pad=(80, 92, 80), objpos="72% center",
+         sello=54, brand=480, city=80, when=66, handle=21),
     dict(group="redes", slug="post-1080x1080", w=1080, h=1080, mode="stack",
-         pad=(76, 86, 76), objpos="72% center",
-         sello=50, brand=420, city=76, kicker=22, when=64, pill=25,
-         pill_pad="18px 30px", handle=19),
+         pad=(72, 84, 72), objpos="72% center",
+         sello=50, brand=440, city=74, when=60, handle=19),
     dict(group="redes", slug="story-1080x1920", w=1080, h=1920, mode="stack",
-         pad=(200, 78, 250), objpos="55% center", photo_h=1400, fade=True,
-         sello=74, brand=600, city=112, kicker=30, when=96, pill=34,
-         pill_pad="24px 40px", handle=24),
+         pad=(190, 80, 240), objpos="55% center", photo_h=1400, fade=True,
+         sello=72, brand=620, city=104, when=88, handle=24),
     dict(group="galeria", slug="galeria-1-1000x1000", w=1000, h=1000, mode="stack",
-         pad=(72, 82, 72), objpos="55% center", max_kb=MAX_KB_GALLERY,
-         sello=48, brand=400, city=72, kicker=21, when=60, pill=24,
-         pill_pad="16px 28px", handle=18),
+         pad=(70, 80, 70), objpos="55% center", max_kb=MAX_KB_GALLERY,
+         sello=48, brand=420, city=70, when=56, handle=18),
     dict(group="galeria", slug="galeria-2-1000x1000", w=1000, h=1000, mode="stack",
          objpos="30% center", clean=True, max_kb=MAX_KB_GALLERY),
     dict(group="galeria", slug="galeria-3-1000x1000", w=1000, h=1000, mode="stack",
@@ -107,6 +104,11 @@ def page(f: dict) -> str:
     pt, px, pb = f.get("pad", (0, 0, 0))
     gap = round(min(f["w"], f["h"]) * 0.028)
     photo_h = f.get("photo_h", f["h"])
+
+    when = f.get("when", 40)
+    place_fs = round(when * 0.62)
+    feats_fs = round(when * 0.46)
+    meta_fs = f.get("handle") or round(when * 0.34)
 
     fade_css = ("""
   -webkit-mask-image:linear-gradient(180deg,transparent 0,rgba(0,0,0,.45) 9%,#000 24%);
@@ -123,8 +125,8 @@ def page(f: dict) -> str:
                     "rgba(20,17,11,.92) 0%,rgba(20,17,11,.80) 26%,rgba(20,17,11,.52) 40%,"
                     "rgba(20,17,11,.18) 52%,transparent 64%")
         veil = (f"linear-gradient(180deg,{top_veil}),"
-                "linear-gradient(0deg,rgba(10,6,2,.96) 0%,rgba(10,6,2,.86) 16%,"
-                "rgba(10,6,2,.48) 34%,transparent 48%)")
+                "linear-gradient(0deg,rgba(10,6,2,.96) 0%,rgba(10,6,2,.88) 18%,"
+                "rgba(10,6,2,.55) 38%,transparent 54%)")
 
     if mode == "strip":
         layout = ".in{flex-direction:row;align-items:center;justify-content:space-between;gap:%dpx;}" % (gap * 2)
@@ -136,28 +138,36 @@ def page(f: dict) -> str:
         layout = (".in{flex-direction:column;align-items:center;text-align:center;}"
                   ".mast,.foot{align-items:center;}.foot{margin-top:auto;}")
 
+    feats_html = "<i>·</i>".join(f"<span>{x}</span>" for x in FEATS)
+
     if clean:
         inner = ""
-        watermark = f'<img class="wm" src="{OKT}" alt="Oktoberfest Artesanal">'
-        wm_bottom = round(f["h"] * .06)
-        wm_width = round(f["w"] * .42)
-        wm_css = (f".wm{{position:absolute;left:50%;bottom:{wm_bottom}px;"
-                  f"transform:translateX(-50%);width:{wm_width}px;height:auto;z-index:3;"
-                  f"opacity:.96;filter:drop-shadow(0 10px 30px rgba(0,0,0,.6));}}")
+        watermark = (f'<img class="wm" src="{OKT}" alt="Oktoberfest Artesanal">'
+                     f'<div class="wm-meta">@oktoberfestartesanalbog · PULEP {PULEP}</div>')
+        wm_bottom = round(f["h"] * .09)
+        wm_width = round(f["w"] * .44)
+        wm_css = (f".wm{{position:absolute;left:50%;bottom:{wm_bottom}px;transform:translateX(-50%);"
+                  f"width:{wm_width}px;height:auto;z-index:3;opacity:.97;"
+                  f"filter:drop-shadow(0 10px 30px rgba(0,0,0,.55));}}"
+                  f".wm-meta{{position:absolute;left:0;right:0;bottom:{round(f['h']*.045)}px;z-index:3;"
+                  f"text-align:center;font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:600;"
+                  f"font-size:{round(f['w']*.022)}px;letter-spacing:.14em;text-transform:uppercase;"
+                  f"color:var(--cream-soft);}}")
     else:
         watermark = ""
         wm_css = ""
         sello = (f'<img class="sello" src="{LATOMA}" alt="La Toma Cervecera">' if f.get("sello") else "")
-        handle = (f'<div class="handle">@oktoberfestartesanalbog</div>' if f.get("handle") else "")
-        pulep = (f'<div class="pulep">PULEP {PULEP}</div>' if PULEP else "")
         if mode == "strip":
             inner = f"""
     <div class="mast"><img class="brand" src="{OKT}" alt="Oktoberfest Artesanal"></div>
     <div class="strip-data">
-      <div class="city">Bogotá <span>2026</span></div>
-      <div class="dot">·</div>
-      <div class="when">24 de octubre</div>
-      <div class="tickets"><span>Boletas próximamente</span></div>
+      <div class="line1">
+        <span class="city">Bogotá <b>2026</b></span><i>·</i>
+        <span class="when">{DATE}</span><i>·</i>
+        <span class="place">{PLACE}</span>
+      </div>
+      <div class="feats">{feats_html}</div>
+      <div class="meta">PULEP {PULEP}</div>
     </div>"""
         else:
             inner = f"""
@@ -168,14 +178,11 @@ def page(f: dict) -> str:
     </div>
     <div class="foot">
       <div class="rule"></div>
-      <div class="kicker">Save the date</div>
-      <div class="when">24 de octubre</div>
-      <div class="tickets"><span>Boletas próximamente</span></div>
-      {handle}{pulep}
+      <div class="when">{DATE}</div>
+      <div class="place">{PLACE}</div>
+      <div class="feats">{feats_html}</div>
+      <div class="meta">@oktoberfestartesanalbog · PULEP {PULEP}</div>
     </div>"""
-
-    def fs(key, default=0):
-        return f.get(key) or default
 
     return f"""<!doctype html>
 <meta charset="utf-8">
@@ -198,34 +205,42 @@ img{{display:block;}}
 .in{{position:absolute;inset:0;z-index:3;display:flex;padding:{pt}px {px}px {pb}px;}}
 .mast,.foot{{display:flex;flex-direction:column;}}
 {layout}
-.sello{{height:{fs('sello')}px;width:auto;opacity:.95;filter:drop-shadow(0 6px 22px rgba(0,0,0,.6));}}
-.brand{{width:{fs('brand')}px;height:auto;margin-top:{round(gap*1.2)}px;
-  filter:drop-shadow(0 10px 30px rgba(0,0,0,.55));}}
+.sello{{height:{f.get('sello',0)}px;width:auto;opacity:.95;filter:drop-shadow(0 6px 22px rgba(0,0,0,.6));}}
+.brand{{width:{f.get('brand',400)}px;height:auto;margin-top:{round(gap*1.1)}px;
+  filter:drop-shadow(0 12px 30px rgba(0,0,0,.45));}}
 .city{{margin-top:{round(gap*.6)}px;font-family:'Barlow Condensed',Barlow,sans-serif;
-  font-weight:700;font-size:{fs('city')}px;line-height:.9;letter-spacing:.085em;
+  font-weight:700;font-size:{f.get('city',60)}px;line-height:.9;letter-spacing:.085em;
   text-transform:uppercase;color:var(--gold);text-shadow:0 6px 34px rgba(0,0,0,.6);}}
-.city span{{color:var(--cream);}}
-.rule{{width:{round(min(f['w'],f['h'])*0.13)}px;height:3px;background:var(--gold);border-radius:2px;}}
-.kicker{{margin-top:{round(gap*.8)}px;font-family:'Barlow Condensed',Barlow,sans-serif;
-  font-weight:600;font-size:{fs('kicker')}px;letter-spacing:.34em;text-transform:uppercase;
-  color:var(--gold);text-shadow:0 3px 18px rgba(0,0,0,.8);}}
-.when{{margin-top:{round(gap*.35)}px;font-family:'Barlow Condensed',Barlow,sans-serif;
-  font-weight:700;font-size:{fs('when')}px;line-height:1;letter-spacing:.05em;
-  text-transform:uppercase;color:var(--cream);text-shadow:0 5px 30px rgba(0,0,0,.85);}}
-.tickets{{margin-top:{round(gap*.9)}px;display:inline-flex;align-items:center;
-  background:var(--gold);color:#2A1B06;border-radius:999px;padding:{f.get('pill_pad','16px 28px')};
-  box-shadow:0 22px 54px -18px rgba(233,167,44,.95);}}
-.tickets span{{font-family:'Barlow Condensed',Barlow,sans-serif;font-size:{fs('pill')}px;
-  font-weight:700;letter-spacing:.13em;text-transform:uppercase;white-space:nowrap;}}
-.handle{{margin-top:{gap}px;font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:600;
-  font-size:{fs('handle')}px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream-soft);}}
-.pulep{{margin-top:{round(gap*.5)}px;font-family:'Barlow Condensed',Barlow,sans-serif;
-  font-weight:600;font-size:{max(12,round(fs('handle',16)*.8))}px;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--cream-soft);}}
-.strip-data{{display:flex;align-items:center;gap:{round(gap*.8)}px;}}
-.strip-data .city,.strip-data .when{{margin:0;}}
-.strip-data .tickets{{margin:0 0 0 {round(gap*.4)}px;}}
-.dot{{font-size:{fs('when')}px;color:var(--gold);line-height:1;opacity:.7;}}
+.city span,.city b{{color:var(--cream);font-weight:700;}}
+.rule{{width:{round(min(f['w'],f['h'])*0.12)}px;height:3px;background:var(--gold);border-radius:2px;
+  margin-bottom:{round(gap*.55)}px;}}
+.when{{font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:700;font-size:{when}px;
+  line-height:1;letter-spacing:.05em;text-transform:uppercase;color:var(--cream);
+  text-shadow:0 5px 30px rgba(0,0,0,.85);}}
+.place{{margin-top:{round(gap*.32)}px;font-family:'Barlow Condensed',Barlow,sans-serif;
+  font-weight:600;font-size:{place_fs}px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);text-shadow:0 3px 18px rgba(0,0,0,.85);}}
+.feats{{margin-top:{round(gap*.75)}px;display:flex;flex-wrap:wrap;align-items:center;
+  justify-content:center;gap:{round(gap*.5)}px;max-width:{round(f['w']*.86)}px;}}
+.feats span{{font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:600;font-size:{feats_fs}px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--cream);
+  text-shadow:0 3px 16px rgba(0,0,0,.85);white-space:nowrap;}}
+.feats i{{color:var(--gold);font-style:normal;font-size:{feats_fs}px;opacity:.85;}}
+.meta{{margin-top:{round(gap*.85)}px;font-family:'Barlow Condensed',Barlow,sans-serif;
+  font-weight:600;font-size:{meta_fs}px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--cream-soft);}}
+/* strip */
+.strip-data{{display:flex;flex-direction:column;align-items:flex-end;text-align:right;gap:{round(gap*.35)}px;}}
+.strip-data .line1{{display:flex;align-items:baseline;gap:{round(gap*.55)}px;}}
+.strip-data .city{{font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:700;
+  font-size:{f.get('city',40)}px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);}}
+.strip-data .city b{{color:var(--cream);}}
+.strip-data .when{{font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:700;
+  font-size:{when}px;letter-spacing:.05em;text-transform:uppercase;color:var(--cream);}}
+.strip-data .place{{margin:0;font-size:{round(when*.82)}px;}}
+.strip-data .line1 i{{color:var(--gold);font-style:normal;opacity:.7;font-size:{round(when*.8)}px;}}
+.strip-data .feats{{margin:0;justify-content:flex-end;max-width:none;}}
+.strip-data .meta{{margin:0;font-size:{round((f.get('handle') or 14)*.9)}px;}}
 {wm_css}
 </style>
 <div class="stage">
@@ -271,16 +286,12 @@ def render(f: dict) -> pathlib.Path:
 
 
 def build_logo() -> pathlib.Path:
+    """Copia el logo B&N ya derivado (make-logos.py) a la carpeta de entrega."""
     out_dir = OUT / "logo"
     out_dir.mkdir(parents=True, exist_ok=True)
-    with Image.open(AS / "okt-logo.png").convert("RGBA") as logo:
-        _, _, _, a = logo.split()
-        gray = ImageOps.grayscale(logo.convert("RGB"))
-        bw = Image.merge("RGBA", (gray, gray, gray, a))
-        bw = bw.crop(bw.getbbox())
-        bw.thumbnail((500, 250), Image.LANCZOS)
+    src = WORK_AS / "logo-oktoberfest-artesanal-byn-500x250.png"
     out = out_dir / "logo-oktoberfest-artesanal-byn-500x250.png"
-    bw.save(out, "PNG", optimize=True)
+    out.write_bytes(src.read_bytes())
     return out
 
 
