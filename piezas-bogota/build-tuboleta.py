@@ -58,7 +58,10 @@ def data_uri(path: pathlib.Path, mime: str) -> str:
 
 HERO = data_uri(REPO_AS / "hero-sunset.jpg", "image/jpeg")
 OKT = data_uri(WORK_AS / "okt-logo-hires.png", "image/png")
-LATOMA = data_uri(REPO_AS / "latoma-blanco.png", "image/png")
+LATOMA = data_uri(WORK_AS / "latoma-blanco-hires.png", "image/png")
+# Logo del proveedor de boletería (solo permitido en piezas de redes sociales).
+TUBOLETA = data_uri(WORK_AS / "tuboleta-blanco.png", "image/png")
+TUBOLETA_WEB = "tuboleta.com"
 FONTS_CSS = (REPO_AS / "fonts.css").read_text(encoding="utf-8")
 
 
@@ -82,11 +85,11 @@ FORMATS = [
          mode="stack", pad=(80, 92, 80), objpos="72% center",
          sello=54, brand=480, city=80, when=66, handle=21),
     dict(group="redes", slug="post-1080x1080", w=1080, h=1080, mode="stack",
-         pad=(72, 84, 72), objpos="72% center",
-         sello=50, brand=440, city=74, when=60, handle=19),
+         pad=(64, 84, 64), objpos="72% center", ticketing=True,
+         sello=48, brand=430, city=72, when=58, handle=19),
     dict(group="redes", slug="story-1080x1920", w=1080, h=1920, mode="stack",
-         pad=(190, 80, 240), objpos="55% center", photo_h=1400, fade=True,
-         sello=72, brand=620, city=104, when=88, handle=24),
+         pad=(180, 80, 230), objpos="55% center", photo_h=1400, fade=True, ticketing=True,
+         sello=70, brand=600, city=100, when=84, handle=24),
     dict(group="galeria", slug="galeria-1-1000x1000", w=1000, h=1000, mode="stack",
          pad=(70, 80, 70), objpos="55% center", max_kb=MAX_KB_GALLERY,
          sello=48, brand=420, city=70, when=56, handle=18),
@@ -116,17 +119,17 @@ def page(f: dict) -> str:
                 if fade else "")
 
     if mode in ("banner", "strip"):
-        veil = ("linear-gradient(90deg,rgba(10,6,2,.88) 0%,rgba(10,6,2,.52) 30%,"
-                "rgba(10,6,2,.44) 58%,rgba(10,6,2,.86) 100%),"
-                "linear-gradient(180deg,rgba(20,17,11,.55) 0%,transparent 38%,rgba(10,6,2,.62) 100%)")
+        veil = ("linear-gradient(90deg,rgba(10,6,2,.78) 0%,rgba(10,6,2,.38) 30%,"
+                "rgba(10,6,2,.30) 58%,rgba(10,6,2,.76) 100%),"
+                "linear-gradient(180deg,rgba(20,17,11,.40) 0%,transparent 40%,rgba(10,6,2,.50) 100%)")
     else:
-        top_veil = ("rgba(20,17,11,.94) 0%,rgba(20,17,11,.60) 20%,rgba(20,17,11,.10) 36%,transparent 46%"
+        top_veil = ("rgba(20,17,11,.86) 0%,rgba(20,17,11,.46) 20%,rgba(20,17,11,.06) 36%,transparent 48%"
                     if fade else
-                    "rgba(20,17,11,.92) 0%,rgba(20,17,11,.80) 26%,rgba(20,17,11,.52) 40%,"
-                    "rgba(20,17,11,.18) 52%,transparent 64%")
+                    "rgba(20,17,11,.82) 0%,rgba(20,17,11,.62) 26%,rgba(20,17,11,.34) 40%,"
+                    "rgba(20,17,11,.10) 52%,transparent 66%")
         veil = (f"linear-gradient(180deg,{top_veil}),"
-                "linear-gradient(0deg,rgba(10,6,2,.96) 0%,rgba(10,6,2,.88) 18%,"
-                "rgba(10,6,2,.55) 38%,transparent 54%)")
+                "linear-gradient(0deg,rgba(10,6,2,.88) 0%,rgba(10,6,2,.70) 18%,"
+                "rgba(10,6,2,.36) 40%,transparent 58%)")
 
     if mode == "strip":
         layout = ".in{flex-direction:row;align-items:center;justify-content:space-between;gap:%dpx;}" % (gap * 2)
@@ -140,10 +143,29 @@ def page(f: dict) -> str:
 
     feats_html = "<i>·</i>".join(f"<span>{x}</span>" for x in FEATS)
 
+    # Ticketing: el logo del proveedor + su web, permitido solo en redes.
+    ticketing = ""
+    if f.get("ticketing"):
+        ticketing = (f'<div class="ticketing"><span class="tk-label">Boletas en</span>'
+                     f'<img class="tk-logo" src="{TUBOLETA}" alt="Tuboleta">'
+                     f'<span class="tk-web">{TUBOLETA_WEB}</span></div>')
+
+    # PULEP en la esquina inferior izquierda, al borde (excepto strip, que lo
+    # lleva en su barra de datos por falta de alto).
+    corner_in = round(min(f["w"], f["h"]) * 0.035)
+    corner_fs = max(12, round(min(f["w"], f["h"]) * 0.019))
+    pulep_corner = ("" if mode == "strip"
+                    else f'<div class="pulep-corner">PULEP {PULEP}</div>')
+    pulep_corner_css = (
+        f".pulep-corner{{position:absolute;left:{corner_in}px;bottom:{corner_in}px;z-index:4;"
+        f"font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:600;font-size:{corner_fs}px;"
+        f"letter-spacing:.16em;text-transform:uppercase;color:var(--cream);"
+        f"text-shadow:0 2px 12px rgba(0,0,0,.9);}}" if mode != "strip" else "")
+
     if clean:
         inner = ""
         watermark = (f'<img class="wm" src="{OKT}" alt="Oktoberfest Artesanal">'
-                     f'<div class="wm-meta">@oktoberfestartesanalbog · PULEP {PULEP}</div>')
+                     f'<div class="wm-meta">@oktoberfestartesanalbog</div>')
         wm_bottom = round(f["h"] * .09)
         wm_width = round(f["w"] * .44)
         wm_css = (f".wm{{position:absolute;left:50%;bottom:{wm_bottom}px;transform:translateX(-50%);"
@@ -181,7 +203,8 @@ def page(f: dict) -> str:
       <div class="when">{DATE}</div>
       <div class="place">{PLACE}</div>
       <div class="feats">{feats_html}</div>
-      <div class="meta">@oktoberfestartesanalbog · PULEP {PULEP}</div>
+      {ticketing}
+      <div class="meta">@oktoberfestartesanalbog</div>
     </div>"""
 
     return f"""<!doctype html>
@@ -198,7 +221,7 @@ img{{display:block;}}
   background:var(--night);color:var(--cream);}}
 .photo{{position:absolute;inset:auto 0 0 0;height:{photo_h}px;{fade_css}}}
 .photo img{{width:100%;height:100%;object-fit:cover;object-position:{f['objpos']};
-  filter:saturate(1.08) contrast(1.04);}}
+  filter:saturate(1.1) contrast(1.03) brightness(1.1);}}
 .glow{{position:absolute;inset:0;
   background:radial-gradient(58% 26% at 42% 40%,rgba(244,196,90,.24),transparent 72%);}}
 .veil{{position:absolute;inset:0;background:{veil};}}
@@ -226,9 +249,16 @@ img{{display:block;}}
   letter-spacing:.11em;text-transform:uppercase;color:var(--cream);
   text-shadow:0 3px 16px rgba(0,0,0,.85);white-space:nowrap;}}
 .feats i{{color:var(--gold);font-style:normal;font-size:{feats_fs}px;opacity:.85;}}
-.meta{{margin-top:{round(gap*.85)}px;font-family:'Barlow Condensed',Barlow,sans-serif;
+.meta{{margin-top:{round(gap*.6)}px;font-family:'Barlow Condensed',Barlow,sans-serif;
   font-weight:600;font-size:{meta_fs}px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--cream-soft);}}
+.ticketing{{margin-top:{round(gap*.95)}px;display:flex;align-items:center;justify-content:center;
+  gap:{round(gap*.5)}px;flex-wrap:wrap;}}
+.tk-label{{font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:600;font-size:{round(when*.48)}px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--cream-soft);}}
+.tk-logo{{height:{round(when*.72)}px;width:auto;filter:drop-shadow(0 4px 16px rgba(0,0,0,.7));}}
+.tk-web{{font-family:'Barlow Condensed',Barlow,sans-serif;font-weight:700;font-size:{round(when*.56)}px;
+  letter-spacing:.05em;color:var(--cream);text-shadow:0 3px 16px rgba(0,0,0,.85);}}
 /* strip */
 .strip-data{{display:flex;flex-direction:column;align-items:flex-end;text-align:right;gap:{round(gap*.35)}px;}}
 .strip-data .line1{{display:flex;align-items:baseline;gap:{round(gap*.55)}px;}}
@@ -241,6 +271,7 @@ img{{display:block;}}
 .strip-data .line1 i{{color:var(--gold);font-style:normal;opacity:.7;font-size:{round(when*.8)}px;}}
 .strip-data .feats{{margin:0;justify-content:flex-end;max-width:none;}}
 .strip-data .meta{{margin:0;font-size:{round((f.get('handle') or 14)*.9)}px;}}
+{pulep_corner_css}
 {wm_css}
 </style>
 <div class="stage">
@@ -250,6 +281,7 @@ img{{display:block;}}
   {watermark}
   <div class="in">{inner}
   </div>
+  {pulep_corner}
 </div>
 """
 
@@ -278,7 +310,8 @@ def render(f: dict) -> pathlib.Path:
 
         jpg = out_dir / f"{f['slug']}.jpg"
         cap = f.get("max_kb", MAX_KB)
-        for q in range(92, 40, -4):
+        # Calidad alta para bordes de logo limpios; baja solo lo justo si excede.
+        for q in range(95, 78, -3):
             rgb.save(jpg, "JPEG", quality=q, optimize=True, progressive=True, dpi=(72, 72))
             if jpg.stat().st_size <= cap * 1024:
                 break
