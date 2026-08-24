@@ -40,6 +40,8 @@ HERO = du(REPO_AS / "hero-sunset.jpg", "image/jpeg")
 OKT = du(WORK_AS / "okt-logo-hires.png", "image/png")
 LATOMA = du(WORK_AS / "latoma-blanco-hires.png", "image/png")
 TUBO = du(WORK_AS / "tuboleta-blanco.png", "image/png")
+SELLO = du(WORK_AS / "ladrillos-sello.png", "image/png")
+SELLO_URL = RAW + "email/ladrillos-por-pola-sello.png"
 FONTS_CSS = (REPO_AS / "fonts.css").read_text(encoding="utf-8")
 
 
@@ -127,7 +129,26 @@ def img_block(src, alt):
     </a></td></tr>"""
 
 
-def email_html(hero_src, exp_src, bol_src):
+def franja_ladrillos(sello_src):
+    return f"""<tr><td style="padding:0;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#EAE1CB" style="background:#EAE1CB;">
+        <tr><td style="padding:28px 46px;text-align:center;">
+          <img src="{sello_src}" width="240" alt="Ladrillos por Pola"
+            style="display:block;margin:0 auto 14px;width:240px;max-width:70%;height:auto;border:0;">
+          <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:24px;font-weight:700;
+            color:#14110B;letter-spacing:.02em;text-transform:uppercase;">Por cada boleta, un ladrillo</div>
+          <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#4a3f2a;
+            max-width:460px;margin:10px auto 0;">
+            Tu entrada aporta a la <b>reconstrucción de los hogares</b> de las familias afectadas por el
+            terremoto en Chocó, Valle del Cauca y el Eje Cafetero. Junto a Bajocuerda y 3 Cordilleras
+            construimos una meta de <b>22.000 ladrillos</b>. Comprar tu boleta también reconstruye.
+          </div>
+        </td></tr>
+      </table>
+    </td></tr>"""
+
+
+def email_html(hero_src, exp_src, bol_src, sello_src):
     return f"""<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -153,6 +174,8 @@ def email_html(hero_src, exp_src, bol_src):
 
     {img_block(exp_src, "Todo esto te espera: +40 cervecerías, +200 cervezas por probar, artistas en vivo, gastronomía y experiencias inmersivas")}
     {img_block(bol_src, "Boletas a la venta: Cervecero Pro, Cervecero Pro + Jarro y De Parche")}
+
+    {franja_ladrillos(sello_src)}
 
     <tr><td style="padding:26px 44px 4px;text-align:center;">
       <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:36px;font-weight:700;color:#E9A72C;
@@ -188,7 +211,8 @@ def main():
     full_img = OUT / "email-oktoberfest-bogota.jpg"
     html_img = email_html(du(hero_jpg, "image/jpeg"),
                           du(CAMP / "carrusel-3-experiencias.jpg", "image/jpeg"),
-                          du(CAMP / "carrusel-2-boleteria.jpg", "image/jpeg"))
+                          du(CAMP / "carrusel-2-boleteria.jpg", "image/jpeg"),
+                          SELLO)
     # medir alto: render a ventana alta y recortar sólido inferior
     src = OUT / ".build.html"; png = OUT / ".build.png"; src.write_text(html_img, encoding="utf-8")
     subprocess.run([CHROME, "--headless=new", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
@@ -208,7 +232,7 @@ def main():
     print("correo (imagen)", im.size, f"{full_img.stat().st_size/1024:.0f} KB")
     # 3) HTML enviable (imágenes por URL pública de GitHub raw)
     (OUT / "email-oktoberfest-bogota.html").write_text(
-        email_html(HERO_URL, IMG_EXP_URL, IMG_BOL_URL), encoding="utf-8")
+        email_html(HERO_URL, IMG_EXP_URL, IMG_BOL_URL, SELLO_URL), encoding="utf-8")
     print("HTML enviable escrito")
 
 
