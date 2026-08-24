@@ -22,9 +22,12 @@ OUT = ROOT / "renders" / "email"
 OUT.mkdir(parents=True, exist_ok=True)
 
 EVENTO_URL = "https://www.tuboleta.com/es/eventos/oktoberfest-artesanal-bogota-2026"
-# URL pública del hero (se sube al repo en esta ruta)
-HERO_URL = ("https://raw.githubusercontent.com/jdbeuth83/propuesta-oktoberfest-2026/"
-            "claude/tuboleta-piezas-bogota/piezas-bogota/renders/email/email-hero.jpg")
+RAW = ("https://raw.githubusercontent.com/jdbeuth83/propuesta-oktoberfest-2026/"
+       "claude/tuboleta-piezas-bogota/piezas-bogota/renders/")
+HERO_URL = RAW + "email/email-hero.jpg"
+CAMP = ROOT / "renders" / "campana-lanzamiento"
+IMG_EXP_URL = RAW + "campana-lanzamiento/carrusel-3-experiencias.jpg"
+IMG_BOL_URL = RAW + "campana-lanzamiento/carrusel-2-boleteria.jpg"
 FEATS = ["+40 Cervecerías", "+200 Cervezas por probar", "Artistas en vivo",
          "Gastronomía", "Experiencias inmersivas"]
 
@@ -110,48 +113,59 @@ def feats_rows():
     return "".join(out)
 
 
-def email_html(hero_src):
+def btn(label):
+    return f"""<table role="presentation" cellpadding="0" cellspacing="0" align="center"><tr>
+      <td align="center" bgcolor="#E9A72C" style="border-radius:999px;">
+        <a href="{EVENTO_URL}" target="_blank" style="display:inline-block;padding:17px 50px;
+          font-family:'Barlow Condensed',Arial,sans-serif;font-size:23px;font-weight:700;letter-spacing:.1em;
+          text-transform:uppercase;color:#2A1B06;text-decoration:none;">{label}</a></td></tr></table>"""
+
+
+def img_block(src, alt):
+    return f"""<tr><td style="padding:0;"><a href="{EVENTO_URL}" target="_blank">
+      <img src="{src}" width="600" alt="{alt}" style="display:block;width:100%;max-width:600px;height:auto;border:0;">
+    </a></td></tr>"""
+
+
+def email_html(hero_src, exp_src, bol_src):
     return f"""<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="x-apple-disable-message-reformatting">
 <title>Oktoberfest Artesanal Bogotá 2026 · ¡Boletas a la venta!</title></head>
 <body style="margin:0;padding:0;background:#0c0a06;">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0">¡Boletas a la venta! Oktoberfest Artesanal Bogotá 2026 · Sábado 24 de octubre · +40 cervecerías, +200 cervezas por probar y más.</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0">¡Boletas a la venta! Oktoberfest Artesanal Bogotá 2026 · Sábado 24 de octubre · +40 cervecerías, +200 cervezas por probar, artistas en vivo y más.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0c0a06;">
 <tr><td align="center" style="padding:24px 12px;">
   <table role="presentation" width="600" cellpadding="0" cellspacing="0"
     style="width:600px;max-width:600px;background:#14110B;border-radius:16px;overflow:hidden;
     font-family:'Barlow Condensed',Arial,Helvetica,sans-serif;color:#EEE7D6;">
-    <tr><td><img src="{hero_src}" width="600" alt="Oktoberfest Artesanal Bogotá 2026 · ¡Boletas a la venta!"
-      style="display:block;width:100%;max-width:600px;height:auto;border:0;"></td></tr>
-    <tr><td style="padding:30px 44px 8px;text-align:center;">
-      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:600;letter-spacing:.24em;
-        text-transform:uppercase;color:#E9A72C;">Todo esto te espera</div>
+
+    {img_block(hero_src, "Oktoberfest Artesanal Bogotá 2026 · ¡Boletas a la venta! · Sábado 24 de octubre · Centro de Eventos CESAP")}
+
+    <tr><td style="padding:28px 44px 6px;text-align:center;">
+      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:26px;font-weight:700;color:#EEE7D6;
+        letter-spacing:.02em;line-height:1.2;">El festival cervecero más esperado<br>llega a <span style="color:#E9A72C;">Bogotá</span></div>
+      <div style="font-family:Arial,sans-serif;font-size:14px;color:#B7AC93;margin-top:10px;line-height:1.5;">
+        Un solo día para vivir la esencia del Oktoberfest: cerveza artesanal, música en vivo,
+        gastronomía y experiencias inmersivas.</div>
     </td></tr>
-    <tr><td style="padding:6px 60px 4px;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">{feats_rows()}</table>
-    </td></tr>
-    <tr><td style="padding:20px 44px 4px;text-align:center;">
-      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:34px;font-weight:700;color:#E9A72C;
-        letter-spacing:.02em;">Boletas desde $54.900<span style="font-size:16px;color:#B7AC93;">*</span></div>
+
+    {img_block(exp_src, "Todo esto te espera: +40 cervecerías, +200 cervezas por probar, artistas en vivo, gastronomía y experiencias inmersivas")}
+    {img_block(bol_src, "Boletas a la venta: Cervecero Pro, Cervecero Pro + Jarro y De Parche")}
+
+    <tr><td style="padding:26px 44px 4px;text-align:center;">
+      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:36px;font-weight:700;color:#E9A72C;
+        letter-spacing:.02em;">Boletas desde $54.900<span style="font-size:17px;color:#B7AC93;">*</span></div>
       <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:18px;font-weight:600;color:#EEE7D6;
         letter-spacing:.06em;text-transform:uppercase;margin-top:2px;">Sábado 24 de octubre · Centro de Eventos CESAP · Bogotá</div>
     </td></tr>
-    <tr><td align="center" style="padding:22px 44px 6px;">
-      <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-        <td align="center" bgcolor="#E9A72C" style="border-radius:999px;">
-          <a href="{EVENTO_URL}" target="_blank"
-            style="display:inline-block;padding:16px 46px;font-family:'Barlow Condensed',Arial,sans-serif;
-            font-size:22px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#2A1B06;
-            text-decoration:none;">Comprar en Tuboleta</a>
-        </td>
-      </tr></table>
-    </td></tr>
-    <tr><td align="center" style="padding:8px 44px 4px;">
+
+    <tr><td align="center" style="padding:22px 44px 6px;">{btn("Comprar en Tuboleta")}</td></tr>
+    <tr><td align="center" style="padding:6px 44px 4px;">
       <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:600;letter-spacing:.1em;
-        text-transform:uppercase;color:#B7AC93;">en tuboleta.com</div>
-    </td></tr>
+        text-transform:uppercase;color:#B7AC93;">en tuboleta.com</div></td></tr>
+
     <tr><td style="padding:22px 44px 30px;border-top:1px solid rgba(255,255,255,.08);text-align:center;">
       <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:14px;letter-spacing:.1em;
         text-transform:uppercase;color:#B7AC93;">@oktoberfestartesanalbog &nbsp;·&nbsp; PULEP IZP513</div>
@@ -170,13 +184,15 @@ def main():
     # 1) hero
     hero_jpg = OUT / "email-hero.jpg"
     print("hero", render(HERO_HTML, 600, 640, hero_jpg, scale=2, cap_kb=300))
-    # 2) correo completo como imagen (hero embebido)
+    # 2) correo completo como imagen (imágenes embebidas)
     full_img = OUT / "email-oktoberfest-bogota.jpg"
-    html_img = email_html(du(hero_jpg, "image/jpeg"))
+    html_img = email_html(du(hero_jpg, "image/jpeg"),
+                          du(CAMP / "carrusel-3-experiencias.jpg", "image/jpeg"),
+                          du(CAMP / "carrusel-2-boleteria.jpg", "image/jpeg"))
     # medir alto: render a ventana alta y recortar sólido inferior
     src = OUT / ".build.html"; png = OUT / ".build.png"; src.write_text(html_img, encoding="utf-8")
     subprocess.run([CHROME, "--headless=new", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
-                    "--force-device-scale-factor=2", "--window-size=624,1600",
+                    "--force-device-scale-factor=2", "--window-size=624,3800",
                     "--virtual-time-budget=8000", f"--screenshot={png}", src.as_uri()],
                    check=True, capture_output=True)
     im = Image.open(png).convert("RGB"); px = im.load()
@@ -190,8 +206,9 @@ def main():
         if full_img.stat().st_size <= 800 * 1024:
             break
     print("correo (imagen)", im.size, f"{full_img.stat().st_size/1024:.0f} KB")
-    # 3) HTML enviable (hero por URL pública)
-    (OUT / "email-oktoberfest-bogota.html").write_text(email_html(HERO_URL), encoding="utf-8")
+    # 3) HTML enviable (imágenes por URL pública de GitHub raw)
+    (OUT / "email-oktoberfest-bogota.html").write_text(
+        email_html(HERO_URL, IMG_EXP_URL, IMG_BOL_URL), encoding="utf-8")
     print("HTML enviable escrito")
 
 
