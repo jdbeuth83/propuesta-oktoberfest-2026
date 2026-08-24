@@ -22,6 +22,8 @@ OUT = ROOT / "renders" / "email"
 OUT.mkdir(parents=True, exist_ok=True)
 
 EVENTO_URL = "https://www.tuboleta.com/es/eventos/oktoberfest-artesanal-bogota-2026"
+ROCKSTAR_PRICE = "$127.200"          # Bogotá: preventa
+ROCKSTAR_URL = EVENTO_URL            # TODO: reemplazar por el link específico de la Experiencia Rockstar
 RAW = ("https://raw.githubusercontent.com/jdbeuth83/propuesta-oktoberfest-2026/"
        "claude/tuboleta-piezas-bogota/piezas-bogota/renders/")
 HERO_URL = RAW + "email/email-hero.jpg"
@@ -177,14 +179,27 @@ def email_html(hero_src, exp_src, bol_src, sello_src):
 
     {franja_ladrillos(sello_src)}
 
-    <tr><td style="padding:26px 44px 4px;text-align:center;">
-      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:36px;font-weight:700;color:#E9A72C;
-        letter-spacing:.02em;">Boletas desde $54.900<span style="font-size:17px;color:#B7AC93;">*</span></div>
+    <tr><td style="padding:26px 44px 6px;text-align:center;">
       <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:18px;font-weight:600;color:#EEE7D6;
-        letter-spacing:.06em;text-transform:uppercase;margin-top:2px;">Sábado 24 de octubre · Centro de Eventos CESAP · Bogotá</div>
+        letter-spacing:.06em;text-transform:uppercase;">Sábado 24 de octubre · Centro de Eventos CESAP · Bogotá</div>
     </td></tr>
 
-    <tr><td align="center" style="padding:22px 44px 6px;">{btn("Comprar en Tuboleta")}</td></tr>
+    <tr><td style="padding:8px 44px 6px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+        style="border:1px solid rgba(233,167,44,.55);border-radius:14px;background:rgba(233,167,44,.08);">
+        <tr><td style="padding:18px 24px;text-align:center;">
+          <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:23px;font-weight:700;
+            letter-spacing:.08em;text-transform:uppercase;color:#E9A72C;">Experiencia Rockstar</div>
+          <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:17px;color:#EEE7D6;margin-top:2px;">
+            Preventa <b style="color:#E9A72C;">{ROCKSTAR_PRICE}*</b> &nbsp;·&nbsp; suma <b>10 ladrillos</b> por experiencia</div>
+          <a href="{ROCKSTAR_URL}" target="_blank" style="display:inline-block;margin-top:10px;
+            font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:700;letter-spacing:.08em;
+            text-transform:uppercase;color:#E9A72C;text-decoration:underline;">Reservar la experiencia &#8594;</a>
+        </td></tr>
+      </table>
+    </td></tr>
+
+    <tr><td align="center" style="padding:20px 44px 6px;">{btn("Comprar en Tuboleta")}</td></tr>
     <tr><td align="center" style="padding:6px 44px 4px;">
       <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:600;letter-spacing:.1em;
         text-transform:uppercase;color:#B7AC93;">en tuboleta.com</div></td></tr>
