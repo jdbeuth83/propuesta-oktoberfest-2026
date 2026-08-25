@@ -35,7 +35,7 @@ def du(p, m):
 
 
 PHOTO = du(FOTO, "image/jpeg")
-OKTX = du(WORK_AS / "okt-x-hires.png", "image/png")
+OKTX = du(WORK_AS / "okt-logo-hires.png", "image/png")  # logo azul de Bogotá (por decisión del cliente, también en Medellín)
 LATOMA = du(WORK_AS / "latoma-blanco-hires.png", "image/png")
 TIQ = du(WORK_AS / "latiquetera-crema.png", "image/png")
 SELLO = du(WORK_AS / "ladrillos-sello.png", "image/png")
