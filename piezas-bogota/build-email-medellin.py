@@ -42,6 +42,14 @@ SELLO = du(WORK_AS / "ladrillos-sello.png", "image/png")
 FONTS_CSS = (REPO_AS / "fonts.css").read_text(encoding="utf-8")
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
+# Fotos de referencia del banco Medellín para galería y bloque Rockstar
+FOTOS = pathlib.Path("/Users/juandiegobeuthbernal/design-system/assets/events/oktoberfest-2026/fotos")
+GAL_SRC = ["copa-vaso/F1-002_Oktober-10.jpg", "escenario/F1-009_Oktober-106.jpg",
+           "gente/F1-004_Oktober-101.jpg", "cervecerias/F1-019_Oktober-115.jpg"]
+ROCK_SRC = "copa-vaso/F1-028_Oktober-123.jpg"
+GAL_URL = [RAW + f"email/med-gal-{i+1}.jpg" for i in range(4)]
+ROCK_URL = RAW + "email/med-rockstar.jpg"
+
 
 HERO_HTML = f"""<!doctype html><meta charset="utf-8"><style>
 {FONTS_CSS}
@@ -77,10 +85,51 @@ HERO_HTML = f"""<!doctype html><meta charset="utf-8"><style>
 </div>"""
 
 
+ROCKSTAR_HTML = f"""<!doctype html><meta charset="utf-8"><style>
+{FONTS_CSS}
+*{{margin:0;box-sizing:border-box}} html,body{{background:#14110B}}
+.stage{{position:relative;width:600px;height:430px;overflow:hidden;background:#14110B;color:#EEE7D6;font-family:'Barlow',sans-serif}}
+.photo{{position:absolute;inset:0}}
+.photo img{{width:100%;height:100%;object-fit:cover;object-position:center 45%;filter:saturate(1.1) contrast(1.05) brightness(1.05)}}
+.veil{{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,7,3,.92) 0%,rgba(10,7,3,.74) 44%,rgba(10,7,3,.5) 100%),
+  linear-gradient(180deg,rgba(20,17,11,.5),rgba(10,6,2,.55))}}
+.in{{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:center;padding:40px 46px}}
+.k{{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:24px;letter-spacing:.28em;text-transform:uppercase;color:#EEE7D6}}
+.big{{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:74px;line-height:.92;letter-spacing:.02em;
+  text-transform:uppercase;color:#E9A72C;text-shadow:0 6px 30px rgba(0,0,0,.7)}}
+.price{{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:46px;color:#EEE7D6;margin-top:8px}}
+.price small{{font-size:20px;color:#B7AC93}}
+.desc{{font-family:'Barlow',sans-serif;font-size:17px;color:#EEE7D6;margin-top:12px;max-width:420px;line-height:1.45}}
+.tag{{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.08em;text-transform:uppercase;
+  color:#E9A72C;margin-top:14px}}
+</style>
+<div class="stage">
+  <div class="photo"><img src="{du(FOTOS / ROCK_SRC, 'image/jpeg')}"></div><div class="veil"></div>
+  <div class="in">
+    <div class="k">Experiencia</div>
+    <div class="big">Rockstar</div>
+    <div class="price">$159.000<small> *</small></div>
+    <div class="desc">Acceso a la <b>Zona Rockstar</b>, manero exclusivo y lo mejor del festival — la forma premium de vivir el Oktoberfest.</div>
+    <div class="tag">+ Suma 10 ladrillos por experiencia</div>
+  </div>
+</div>"""
+
+
 def feats_rows():
     return "".join(f"""<tr><td style="padding:8px 0;font-family:'Barlow Condensed',Arial,sans-serif;font-size:24px;
       font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#EEE7D6">
       <span style="color:#E9A72C">&#9670;</span>&nbsp;&nbsp;{x}</td></tr>""" for x in FEATS)
+
+
+def gallery_block(urls):
+    def cell(u, alt):
+        return (f'<td width="50%" style="padding:4px;"><img src="{u}" width="292" alt="{alt}" '
+                f'style="display:block;width:100%;height:auto;border-radius:10px;border:0;"></td>')
+    return f"""<tr><td style="padding:10px 40px 6px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr>{cell(urls[0],"Cerveza artesanal")}{cell(urls[1],"Escenarios en vivo")}</tr>
+        <tr>{cell(urls[2],"Miles de asistentes")}{cell(urls[3],"Cervecerías")}</tr>
+      </table></td></tr>"""
 
 
 def franja_ladrillos(sello_src):
@@ -109,7 +158,7 @@ def btn(label):
           text-transform:uppercase;color:#2A1B06;text-decoration:none;">{label}</a></td></tr></table>"""
 
 
-def email_html(hero_src, sello_src, tiq_src):
+def email_html(hero_src, sello_src, tiq_src, gal_urls, rock_src):
     return f"""<!doctype html><html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="x-apple-disable-message-reformatting">
 <title>Oktoberfest Artesanal X · Medellín 2026 · ¡Boletas a la venta!</title></head>
@@ -139,6 +188,8 @@ def email_html(hero_src, sello_src, tiq_src):
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0">{feats_rows()}</table>
     </td></tr>
 
+    {gallery_block(gal_urls)}
+
     {franja_ladrillos(sello_src)}
 
     <tr><td style="padding:26px 44px 6px;text-align:center;">
@@ -146,22 +197,19 @@ def email_html(hero_src, sello_src, tiq_src):
         letter-spacing:.06em;text-transform:uppercase;">Sábado 26 de septiembre · Parque Norte · Medellín</div>
     </td></tr>
 
-    <tr><td style="padding:8px 44px 6px;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-        style="border:1px solid rgba(233,167,44,.55);border-radius:14px;background:rgba(233,167,44,.08);">
-        <tr><td style="padding:18px 24px;text-align:center;">
-          <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:23px;font-weight:700;
-            letter-spacing:.08em;text-transform:uppercase;color:#E9A72C;">Experiencia Rockstar</div>
-          <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:17px;color:#EEE7D6;margin-top:2px;">
-            <b style="color:#E9A72C;">{ROCKSTAR_PRICE}*</b> &nbsp;·&nbsp; suma <b>10 ladrillos</b> por experiencia</div>
-          <a href="{ROCKSTAR_URL}" target="_blank" style="display:inline-block;margin-top:10px;
-            font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:700;letter-spacing:.08em;
-            text-transform:uppercase;color:#E9A72C;text-decoration:underline;">Reservar la experiencia &#8594;</a>
-        </td></tr>
-      </table>
+    <tr><td style="padding:16px 40px 6px;"><a href="{ROCKSTAR_URL}" target="_blank">
+      <img src="{rock_src}" width="600" alt="Experiencia Rockstar · $159.000 · Zona Rockstar · suma 10 ladrillos"
+        style="display:block;width:100%;max-width:600px;height:auto;border-radius:14px;border:0;"></a></td></tr>
+    <tr><td align="center" style="padding:8px 44px 4px;">
+      <table role="presentation" cellpadding="0" cellspacing="0" align="center"><tr>
+        <td align="center" bgcolor="#E9A72C" style="border-radius:999px;">
+          <a href="{ROCKSTAR_URL}" target="_blank" style="display:inline-block;padding:15px 40px;
+            font-family:'Barlow Condensed',Arial,sans-serif;font-size:20px;font-weight:700;letter-spacing:.08em;
+            text-transform:uppercase;color:#2A1B06;text-decoration:none;">Reservar la Experiencia Rockstar</a>
+        </td></tr></table>
     </td></tr>
 
-    <tr><td align="center" style="padding:20px 44px 6px;">{btn("Comprar en La Tiquetera")}</td></tr>
+    <tr><td align="center" style="padding:18px 44px 6px;border-top:1px solid rgba(255,255,255,.06);">{btn("Comprar boleta general")}</td></tr>
     <tr><td align="center" style="padding:8px 44px 6px;">
       <table role="presentation" cellpadding="0" cellspacing="0"><tr>
         <td style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:600;letter-spacing:.08em;
@@ -184,38 +232,65 @@ def email_html(hero_src, sello_src, tiq_src):
 </td></tr></table></body></html>"""
 
 
-def main():
-    src = OUT / ".build.html"; png = OUT / ".build.png"
-    # 1) hero
-    hero_jpg = OUT / "email-hero-medellin.jpg"
-    src.write_text(HERO_HTML, encoding="utf-8")
+def render_html(html, w, h, out, cap_kb):
+    src = OUT / ".build.html"; png = OUT / ".build.png"; src.write_text(html, encoding="utf-8")
     subprocess.run([CHROME, "--headless=new", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
-                    "--force-device-scale-factor=2", "--window-size=600,640",
+                    "--force-device-scale-factor=2", f"--window-size={w},{h}",
                     "--virtual-time-budget=8000", f"--screenshot={png}", src.as_uri()], check=True, capture_output=True)
-    im = Image.open(png).convert("RGB")
+    return Image.open(png).convert("RGB")
+
+
+def crop_square(rel, side=600):
+    im = Image.open(FOTOS / rel).convert("RGB")
+    s = min(im.size); im = im.crop(((im.width-s)//2, (im.height-s)//2, (im.width+s)//2, (im.height+s)//2))
+    return im.resize((side, side), Image.LANCZOS)
+
+
+def main():
+    # 1) galería (4 fotos cuadradas)
+    gal_jpg = []
+    for i, rel in enumerate(GAL_SRC):
+        p = OUT / f"med-gal-{i+1}.jpg"
+        im = crop_square(rel, 600)
+        for q in range(88, 55, -4):
+            im.save(p, "JPEG", quality=q, optimize=True, progressive=True, dpi=(72, 72))
+            if p.stat().st_size <= 180 * 1024:
+                break
+        gal_jpg.append(p)
+    # 2) hero
+    hero_jpg = OUT / "email-hero-medellin.jpg"
+    im = render_html(HERO_HTML, 600, 640, hero_jpg, 300)
     for q in range(90, 55, -4):
         im.save(hero_jpg, "JPEG", quality=q, optimize=True, progressive=True, dpi=(72, 72))
         if hero_jpg.stat().st_size <= 300 * 1024:
             break
     print("hero", im.size)
-    # 2) correo completo como imagen (embebido)
+    # 3) banner Rockstar
+    rock_jpg = OUT / "med-rockstar.jpg"
+    im = render_html(ROCKSTAR_HTML, 600, 430, rock_jpg, 260)
+    for q in range(90, 55, -4):
+        im.save(rock_jpg, "JPEG", quality=q, optimize=True, progressive=True, dpi=(72, 72))
+        if rock_jpg.stat().st_size <= 260 * 1024:
+            break
+    print("rockstar", im.size)
+    # 4) correo completo como imagen (todo embebido)
     full_img = OUT / "email-oktoberfest-medellin.jpg"
-    src.write_text(email_html(du(hero_jpg, "image/jpeg"), SELLO, TIQ), encoding="utf-8")
-    subprocess.run([CHROME, "--headless=new", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
-                    "--force-device-scale-factor=2", "--window-size=624,3400",
-                    "--virtual-time-budget=8000", f"--screenshot={png}", src.as_uri()], check=True, capture_output=True)
-    im = Image.open(png).convert("RGB"); px = im.load(); bg = (12, 10, 6); end = im.height
+    gal_du = [du(p, "image/jpeg") for p in gal_jpg]
+    im = render_html(email_html(du(hero_jpg, "image/jpeg"), SELLO, TIQ, gal_du, du(rock_jpg, "image/jpeg")),
+                     624, 4200, full_img, 900)
+    px = im.load(); bg = (12, 10, 6); end = im.height
     for y in range(im.height - 1, 0, -1):
         if any(abs(px[x, y][0]-bg[0])+abs(px[x, y][1]-bg[1])+abs(px[x, y][2]-bg[2]) > 20 for x in range(0, im.width, 40)):
             end = min(im.height, y + 40); break
     im = im.crop((0, 0, im.width, end))
-    for q in range(90, 55, -4):
+    for q in range(90, 50, -4):
         im.save(full_img, "JPEG", quality=q, optimize=True, progressive=True, dpi=(72, 72))
-        if full_img.stat().st_size <= 850 * 1024:
+        if full_img.stat().st_size <= 950 * 1024:
             break
     print("correo (imagen)", im.size, f"{full_img.stat().st_size/1024:.0f} KB")
-    # 3) HTML enviable (imágenes por URL raw)
-    (OUT / "email-oktoberfest-medellin.html").write_text(email_html(HERO_URL, SELLO_URL, TIQ_URL), encoding="utf-8")
+    # 5) HTML enviable (imágenes por URL raw de GitHub)
+    (OUT / "email-oktoberfest-medellin.html").write_text(
+        email_html(HERO_URL, SELLO_URL, TIQ_URL, GAL_URL, ROCK_URL), encoding="utf-8")
     print("HTML enviable escrito")
 
 
