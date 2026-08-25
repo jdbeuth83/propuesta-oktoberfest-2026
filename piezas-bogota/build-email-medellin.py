@@ -46,7 +46,7 @@ CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 FOTOS = pathlib.Path("/Users/juandiegobeuthbernal/design-system/assets/events/oktoberfest-2026/fotos")
 GAL_SRC = ["copa-vaso/F1-002_Oktober-10.jpg", "escenario/F1-009_Oktober-106.jpg",
            "gente/F1-004_Oktober-101.jpg", "cervecerias/F1-019_Oktober-115.jpg"]
-ROCK_SRC = "copa-vaso/F1-028_Oktober-123.jpg"
+ROCK_SRC = "copa-vaso/F1-057_Oktober-15.jpg"  # cerveza oscura servida en copa estrella (fuerte, clara)
 GAL_URL = [RAW + f"email/med-gal-{i+1}.jpg" for i in range(4)]
 ROCK_URL = RAW + "email/med-rockstar.jpg"
 
