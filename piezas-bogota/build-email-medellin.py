@@ -26,8 +26,8 @@ RAW = ("https://raw.githubusercontent.com/jdbeuth83/propuesta-oktoberfest-2026/"
 HERO_URL = RAW + "email/email-hero-medellin.jpg"
 SELLO_URL = RAW + "email/ladrillos-por-pola-sello.png"
 TIQ_URL = RAW + "email/latiquetera-crema.png"
-FEATS = ["+40 Cervecerías", "+200 Cervezas por probar", "Artistas en vivo",
-         "Gastronomía", "Experiencias inmersivas"]
+FEATS = ["+70 Cervecerías", "+350 Cervezas por probar", "4 Escenarios en simultáneo",
+         "Artistas en vivo", "Gastronomía urbana", "Atracciones del parque"]
 
 
 def du(p, m):
@@ -127,9 +127,10 @@ def email_html(hero_src, sello_src, tiq_src):
 
     <tr><td style="padding:28px 44px 6px;text-align:center;">
       <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:26px;font-weight:700;color:#EEE7D6;line-height:1.2;">
-        La décima edición del festival cervecero<br>vuelve a <span style="color:#E9A72C;">Medellín</span></div>
-      <div style="font-family:Arial,sans-serif;font-size:14px;color:#B7AC93;margin-top:10px;line-height:1.5;">
-        Un día para vivir la esencia del Oktoberfest: cerveza artesanal, música en vivo, gastronomía y experiencias inmersivas.</div>
+        El festival de cerveza artesanal<br>más grande de <span style="color:#E9A72C;">Colombia</span></div>
+      <div style="font-family:Arial,sans-serif;font-size:14px;color:#B7AC93;margin-top:10px;line-height:1.55;">
+        13.000 personas, <b>4 escenarios en simultáneo</b>, cerveza artesanal, música en vivo, gastronomía urbana,
+        experiencias y las atracciones del Parque Norte. 12 horas de festival: 12:00 m. a 12:00 a. m.</div>
     </td></tr>
 
     <tr><td style="padding:14px 66px 6px;text-align:center;">
