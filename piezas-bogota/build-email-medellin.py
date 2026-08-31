@@ -119,6 +119,51 @@ ROCKSTAR_HTML = f"""<!doctype html><meta charset="utf-8"><style>
 </div>"""
 
 
+ARTISTS = [["Tributo a Caifanes", "The Mills"], ["Bajo Tierra", "Tributo a Molotov"],
+           ["Nepentes", "Manuel Urrego"], ["Terlete", "DJ Tobby"]]
+_art_lines = "".join(
+    '<div class="al">' + '<i>·</i>'.join(f'<span>{a}</span>' for a in row) + '</div>' for row in ARTISTS)
+
+LINEUP_HTML = f"""<!doctype html><meta charset="utf-8"><style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&display=swap');
+{FONTS_CSS}
+*{{margin:0;box-sizing:border-box}} html,body{{background:#14110B}}
+.stage{{position:relative;width:600px;height:750px;overflow:hidden;background:#14110B;color:#EEE7D6;font-family:'Barlow',sans-serif}}
+.photo{{position:absolute;inset:0}}
+.photo img{{width:100%;height:100%;object-fit:cover;object-position:center 60%;filter:saturate(1.06) contrast(1.04) brightness(1.02)}}
+.veil{{position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,9,5,.82) 0%,rgba(12,9,5,.5) 34%,rgba(12,9,5,.55) 62%,rgba(10,6,2,.9) 100%)}}
+.in{{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;text-align:center;padding:30px 34px 26px}}
+.brand{{width:220px;filter:drop-shadow(0 6px 18px rgba(0,0,0,.55))}}
+.meta{{margin-top:12px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;letter-spacing:.12em;
+  text-transform:uppercase;color:#EEE7D6}}
+.meta b{{color:#E9A72C}}
+.head{{margin-top:16px;font-family:'Playfair Display',serif;font-weight:800;font-size:66px;line-height:.95;
+  text-transform:uppercase;color:#EEE7D6;text-shadow:0 6px 26px rgba(0,0,0,.7)}}
+.al{{font-family:'Playfair Display',serif;font-weight:700;font-size:28px;line-height:1.32;text-transform:uppercase;color:#EEE7D6;
+  text-shadow:0 3px 14px rgba(0,0,0,.85)}}
+.al i{{color:#E9A72C;font-style:normal;margin:0 8px}}
+.more{{margin-top:8px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:19px;letter-spacing:.14em;
+  text-transform:uppercase;color:#E9A72C}}
+.foot{{margin-top:auto;display:flex;flex-direction:column;align-items:center}}
+.lt{{width:150px;opacity:.95}} .tk{{margin-top:8px;font-family:'Barlow Condensed',sans-serif;font-weight:700;
+  font-size:16px;letter-spacing:.1em;text-transform:uppercase;color:#EEE7D6}}
+</style>
+<div class="stage">
+  <div class="photo"><img src="{du(FOTO,'image/jpeg')}"></div><div class="veil"></div>
+  <div class="in">
+    <img class="brand" src="{du(WORK_AS/'okt-logo-hires.png','image/png')}">
+    <div class="meta">26 Sep 2026 <b>·</b> Parque Norte <b>·</b> Medellín</div>
+    <div class="head">Kraken</div>
+    <div style="margin-top:12px">{_art_lines}</div>
+    <div class="more">+ Más artistas por confirmar</div>
+    <div class="foot">
+      <img class="lt" src="{du(WORK_AS/'latoma-blanco-hires.png','image/png')}">
+      <div class="tk">Boletería en latiquetera.com</div>
+    </div>
+  </div>
+</div>"""
+
+
 def feats_rows():
     return "".join(f"""<tr><td style="padding:8px 0;font-family:'Barlow Condensed',Arial,sans-serif;font-size:24px;
       font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#EEE7D6">
@@ -310,15 +355,21 @@ def main():
         if rock_jpg.stat().st_size <= 260 * 1024:
             break
     print("rockstar", im.size)
-    # copiar jarro + line up a la carpeta de render para hospedarlos
+    # 3b) Line Up (pieza propia, editable) + jarro para hospedar
     import shutil
+    lineup_jpg = OUT / "lineup-medellin.jpg"
+    im = render_html(LINEUP_HTML, 600, 750, lineup_jpg, 260)
+    for q in range(90, 55, -4):
+        im.save(lineup_jpg, "JPEG", quality=q, optimize=True, progressive=True, dpi=(72, 72))
+        if lineup_jpg.stat().st_size <= 260 * 1024:
+            break
+    print("lineup", im.size)
     shutil.copy(WORK_AS / "jarro-email.jpg", OUT / "jarro-email.jpg")
-    shutil.copy(WORK_AS / "lineup-medellin.jpg", OUT / "lineup-medellin.jpg")
     # 4) correo completo como imagen (todo embebido)
     full_img = OUT / "email-oktoberfest-medellin.jpg"
     gal_du = [du(p, "image/jpeg") for p in gal_jpg]
     im = render_html(email_html(du(hero_jpg, "image/jpeg"), SELLO, TIQ, gal_du, du(rock_jpg, "image/jpeg"),
-                                LINEUP, JARRO),
+                                du(lineup_jpg, "image/jpeg"), JARRO),
                      624, 5400, full_img, 980)
     px = im.load(); bg = (12, 10, 6); end = im.height
     for y in range(im.height - 1, 0, -1):
