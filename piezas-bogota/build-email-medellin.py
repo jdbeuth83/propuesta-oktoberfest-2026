@@ -39,6 +39,8 @@ OKTX = du(WORK_AS / "okt-logo-hires.png", "image/png")  # logo azul de Bogotá (
 LATOMA = du(WORK_AS / "latoma-blanco-hires.png", "image/png")
 TIQ = du(WORK_AS / "latiquetera-crema.png", "image/png")
 SELLO = du(WORK_AS / "ladrillos-sello.png", "image/png")
+LINEUP = du(WORK_AS / "lineup-medellin.jpg", "image/jpeg")
+JARRO = du(WORK_AS / "jarro-email.jpg", "image/jpeg")
 FONTS_CSS = (REPO_AS / "fonts.css").read_text(encoding="utf-8")
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
@@ -49,6 +51,8 @@ GAL_SRC = ["copa-vaso/F1-002_Oktober-10.jpg", "escenario/F1-009_Oktober-106.jpg"
 ROCK_SRC = "copa-vaso/F1-057_Oktober-15.jpg"  # cerveza oscura servida en copa estrella (fuerte, clara)
 GAL_URL = [RAW + f"email/med-gal-{i+1}.jpg" for i in range(4)]
 ROCK_URL = RAW + "email/med-rockstar.jpg"
+LINEUP_URL = RAW + "email/lineup-medellin.jpg"
+JARRO_URL = RAW + "email/jarro-email.jpg"
 
 
 HERO_HTML = f"""<!doctype html><meta charset="utf-8"><style>
@@ -132,6 +136,35 @@ def gallery_block(urls):
       </table></td></tr>"""
 
 
+def lineup_block(url):
+    return f"""<tr><td style="padding:22px 40px 6px;text-align:center;">
+      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:16px;font-weight:600;letter-spacing:.24em;
+        text-transform:uppercase;color:#E9A72C;margin-bottom:10px;">Line Up · Artistas confirmados</div>
+      <a href="{EVENTO_URL}" target="_blank"><img src="{url}" width="600" alt="Line Up Oktoberfest Artesanal Medellín 2026: Kraken, Tributo a Caifanes, The Mills, Bajo Tierra, Tributo a Molotov, Nepentes, Lianna, Manuel Urrego, Terlete, DJ Tobby"
+        style="display:block;width:100%;max-width:600px;height:auto;border-radius:12px;border:0;"></a>
+    </td></tr>"""
+
+
+def jarro_block(url):
+    return f"""<tr><td style="padding:22px 40px 8px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+        style="background:rgba(233,167,44,.06);border:1px solid rgba(233,167,44,.35);border-radius:14px;">
+        <tr>
+          <td width="44%" style="padding:14px 8px 14px 16px;"><img src="{url}" width="100%" alt="Jarro X Aniversario La Toma Cervecera"
+            style="display:block;width:100%;height:auto;border-radius:10px;border:0;"></td>
+          <td width="56%" style="padding:14px 20px 14px 10px;">
+            <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:24px;font-weight:700;letter-spacing:.04em;
+              text-transform:uppercase;color:#E9A72C;line-height:1.05;">El jarro<br>X Aniversario</div>
+            <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:16px;font-weight:600;color:#B7AC93;
+              letter-spacing:.1em;margin-top:4px;">2016 — 2026</div>
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.55;color:#EEE7D6;margin-top:10px;">
+              10 años celebrando la cultura cervecera. Llévate el <b>jarro conmemorativo</b> de la edición X — disponible con tu localidad Cervecero Pro + Jarro.</div>
+          </td>
+        </tr>
+      </table>
+    </td></tr>"""
+
+
 def franja_ladrillos(sello_src):
     return f"""<tr><td style="padding:0;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#EAE1CB" style="background:#EAE1CB;">
@@ -158,7 +191,7 @@ def btn(label):
           text-transform:uppercase;color:#2A1B06;text-decoration:none;">{label}</a></td></tr></table>"""
 
 
-def email_html(hero_src, sello_src, tiq_src, gal_urls, rock_src):
+def email_html(hero_src, sello_src, tiq_src, gal_urls, rock_src, lineup_src, jarro_src):
     return f"""<!doctype html><html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="x-apple-disable-message-reformatting">
 <title>Oktoberfest Artesanal X · Medellín 2026 · ¡Boletas a la venta!</title></head>
@@ -188,7 +221,11 @@ def email_html(hero_src, sello_src, tiq_src, gal_urls, rock_src):
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0">{feats_rows()}</table>
     </td></tr>
 
+    {lineup_block(lineup_src)}
+
     {gallery_block(gal_urls)}
+
+    {jarro_block(jarro_src)}
 
     {franja_ladrillos(sello_src)}
 
@@ -273,11 +310,16 @@ def main():
         if rock_jpg.stat().st_size <= 260 * 1024:
             break
     print("rockstar", im.size)
+    # copiar jarro + line up a la carpeta de render para hospedarlos
+    import shutil
+    shutil.copy(WORK_AS / "jarro-email.jpg", OUT / "jarro-email.jpg")
+    shutil.copy(WORK_AS / "lineup-medellin.jpg", OUT / "lineup-medellin.jpg")
     # 4) correo completo como imagen (todo embebido)
     full_img = OUT / "email-oktoberfest-medellin.jpg"
     gal_du = [du(p, "image/jpeg") for p in gal_jpg]
-    im = render_html(email_html(du(hero_jpg, "image/jpeg"), SELLO, TIQ, gal_du, du(rock_jpg, "image/jpeg")),
-                     624, 4200, full_img, 900)
+    im = render_html(email_html(du(hero_jpg, "image/jpeg"), SELLO, TIQ, gal_du, du(rock_jpg, "image/jpeg"),
+                                LINEUP, JARRO),
+                     624, 5400, full_img, 980)
     px = im.load(); bg = (12, 10, 6); end = im.height
     for y in range(im.height - 1, 0, -1):
         if any(abs(px[x, y][0]-bg[0])+abs(px[x, y][1]-bg[1])+abs(px[x, y][2]-bg[2]) > 20 for x in range(0, im.width, 40)):
@@ -290,7 +332,7 @@ def main():
     print("correo (imagen)", im.size, f"{full_img.stat().st_size/1024:.0f} KB")
     # 5) HTML enviable (imágenes por URL raw de GitHub)
     (OUT / "email-oktoberfest-medellin.html").write_text(
-        email_html(HERO_URL, SELLO_URL, TIQ_URL, GAL_URL, ROCK_URL), encoding="utf-8")
+        email_html(HERO_URL, SELLO_URL, TIQ_URL, GAL_URL, ROCK_URL, LINEUP_URL, JARRO_URL), encoding="utf-8")
     print("HTML enviable escrito")
 
 
