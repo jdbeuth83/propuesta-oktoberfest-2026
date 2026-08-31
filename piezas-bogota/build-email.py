@@ -229,10 +229,25 @@ def email_html(hero_src, exp_src, bol_src, sello_src, jarro_src, rock_src):
         gastronomía y experiencias inmersivas.</div>
     </td></tr>
 
+    {jarro_block(jarro_src)}
+
+    <tr><td style="padding:16px 40px 6px;"><a href="{ROCKSTAR_URL}" target="_blank">
+      <img src="{rock_src}" width="600" alt="Experiencia Rockstar · Preventa {ROCKSTAR_PRICE} · Zona Rockstar · suma 10 ladrillos"
+        style="display:block;width:100%;max-width:600px;height:auto;border-radius:14px;border:0;"></a></td></tr>
+    <tr><td align="center" style="padding:8px 44px 14px;">
+      <table role="presentation" cellpadding="0" cellspacing="0" align="center"><tr>
+        <td align="center" bgcolor="#E9A72C" style="border-radius:999px;">
+          <a href="{ROCKSTAR_URL}" target="_blank" style="display:inline-block;padding:15px 40px;
+            font-family:'Barlow Condensed',Arial,sans-serif;font-size:20px;font-weight:700;letter-spacing:.08em;
+            text-transform:uppercase;color:#2A1B06;text-decoration:none;">Reservar la Experiencia Rockstar</a>
+        </td></tr></table></td></tr>
+
+    <tr><td style="padding:22px 44px 4px;text-align:center;border-top:1px solid rgba(255,255,255,.08);">
+      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:600;letter-spacing:.22em;
+        text-transform:uppercase;color:#B7AC93;">Vive la experiencia completa</div></td></tr>
+
     {img_block(exp_src, "Todo esto te espera: +40 cervecerías, +200 cervezas por probar, artistas en vivo, gastronomía y experiencias inmersivas")}
     {img_block(bol_src, "Boletas a la venta: Cervecero Pro, Cervecero Pro + Jarro y De Parche")}
-
-    {jarro_block(jarro_src)}
 
     {franja_ladrillos(sello_src)}
 
@@ -240,17 +255,6 @@ def email_html(hero_src, exp_src, bol_src, sello_src, jarro_src, rock_src):
       <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:18px;font-weight:600;color:#EEE7D6;
         letter-spacing:.06em;text-transform:uppercase;">Sábado 24 de octubre · Centro de Eventos CESAP · Bogotá</div>
     </td></tr>
-
-    <tr><td style="padding:16px 40px 6px;"><a href="{ROCKSTAR_URL}" target="_blank">
-      <img src="{rock_src}" width="600" alt="Experiencia Rockstar · Preventa {ROCKSTAR_PRICE} · Zona Rockstar · suma 10 ladrillos"
-        style="display:block;width:100%;max-width:600px;height:auto;border-radius:14px;border:0;"></a></td></tr>
-    <tr><td align="center" style="padding:8px 44px 4px;">
-      <table role="presentation" cellpadding="0" cellspacing="0" align="center"><tr>
-        <td align="center" bgcolor="#E9A72C" style="border-radius:999px;">
-          <a href="{ROCKSTAR_URL}" target="_blank" style="display:inline-block;padding:15px 40px;
-            font-family:'Barlow Condensed',Arial,sans-serif;font-size:20px;font-weight:700;letter-spacing:.08em;
-            text-transform:uppercase;color:#2A1B06;text-decoration:none;">Reservar la Experiencia Rockstar</a>
-        </td></tr></table></td></tr>
 
     <tr><td align="center" style="padding:18px 44px 6px;border-top:1px solid rgba(255,255,255,.06);">{btn("Comprar boleta general")}</td></tr>
     <tr><td align="center" style="padding:6px 44px 4px;">

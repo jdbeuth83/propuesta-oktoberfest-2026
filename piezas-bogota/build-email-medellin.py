@@ -260,35 +260,35 @@ def email_html(hero_src, sello_src, tiq_src, gal_urls, rock_src, lineup_src, jar
         experiencias y las atracciones del Parque Norte. 12 horas de festival: 12:00 m. a 12:00 a. m.</div>
     </td></tr>
 
-    <tr><td style="padding:14px 66px 6px;text-align:center;">
-      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:16px;font-weight:600;letter-spacing:.24em;
-        text-transform:uppercase;color:#E9A72C;margin-bottom:6px;">Todo esto te espera</div>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">{feats_rows()}</table>
-    </td></tr>
-
     {lineup_block(lineup_src)}
 
-    {gallery_block(gal_urls)}
-
     {jarro_block(jarro_src)}
-
-    {franja_ladrillos(sello_src)}
-
-    <tr><td style="padding:26px 44px 6px;text-align:center;">
-      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:18px;font-weight:600;color:#EEE7D6;
-        letter-spacing:.06em;text-transform:uppercase;">Sábado 26 de septiembre · Parque Norte · Medellín</div>
-    </td></tr>
 
     <tr><td style="padding:16px 40px 6px;"><a href="{ROCKSTAR_URL}" target="_blank">
       <img src="{rock_src}" width="600" alt="Experiencia Rockstar · $159.000 · Zona Rockstar · suma 10 ladrillos"
         style="display:block;width:100%;max-width:600px;height:auto;border-radius:14px;border:0;"></a></td></tr>
-    <tr><td align="center" style="padding:8px 44px 4px;">
+    <tr><td align="center" style="padding:8px 44px 14px;">
       <table role="presentation" cellpadding="0" cellspacing="0" align="center"><tr>
         <td align="center" bgcolor="#E9A72C" style="border-radius:999px;">
           <a href="{ROCKSTAR_URL}" target="_blank" style="display:inline-block;padding:15px 40px;
             font-family:'Barlow Condensed',Arial,sans-serif;font-size:20px;font-weight:700;letter-spacing:.08em;
             text-transform:uppercase;color:#2A1B06;text-decoration:none;">Reservar la Experiencia Rockstar</a>
         </td></tr></table>
+    </td></tr>
+
+    <tr><td style="padding:24px 66px 6px;text-align:center;border-top:1px solid rgba(255,255,255,.08);">
+      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:16px;font-weight:600;letter-spacing:.24em;
+        text-transform:uppercase;color:#E9A72C;margin-bottom:6px;">Todo esto te espera</div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">{feats_rows()}</table>
+    </td></tr>
+
+    {gallery_block(gal_urls)}
+
+    {franja_ladrillos(sello_src)}
+
+    <tr><td style="padding:26px 44px 6px;text-align:center;">
+      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:18px;font-weight:600;color:#EEE7D6;
+        letter-spacing:.06em;text-transform:uppercase;">Sábado 26 de septiembre · Parque Norte · Medellín</div>
     </td></tr>
 
     <tr><td align="center" style="padding:18px 44px 6px;border-top:1px solid rgba(255,255,255,.06);">{btn("Comprar boleta general")}</td></tr>
