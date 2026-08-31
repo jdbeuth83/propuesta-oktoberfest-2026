@@ -44,6 +44,11 @@ LATOMA = du(WORK_AS / "latoma-blanco-hires.png", "image/png")
 TUBO = du(WORK_AS / "tuboleta-blanco.png", "image/png")
 SELLO = du(WORK_AS / "ladrillos-sello.png", "image/png")
 SELLO_URL = RAW + "email/ladrillos-por-pola-sello.png"
+FOTOS = pathlib.Path("/Users/juandiegobeuthbernal/design-system/assets/events/oktoberfest-2026/fotos")
+ROCK_SRC = "copa-vaso/F1-057_Oktober-15.jpg"   # cerveza fuerte servida en copa estrella
+JARRO = du(WORK_AS / "jarro-email.jpg", "image/jpeg")
+JARRO_URL = RAW + "email/jarro-email.jpg"
+ROCK_URL = RAW + "email/bog-rockstar.jpg"
 FONTS_CSS = (REPO_AS / "fonts.css").read_text(encoding="utf-8")
 
 
@@ -108,6 +113,56 @@ HERO_HTML = f"""<!doctype html><meta charset="utf-8"><style>
 </div>"""
 
 
+ROCKSTAR_HTML = f"""<!doctype html><meta charset="utf-8"><style>
+{FONTS_CSS}
+*{{margin:0;box-sizing:border-box}} html,body{{background:#14110B}}
+.stage{{position:relative;width:600px;height:430px;overflow:hidden;background:#14110B;color:#EEE7D6;font-family:'Barlow',sans-serif}}
+.photo{{position:absolute;inset:0}}
+.photo img{{width:100%;height:100%;object-fit:cover;object-position:center 45%;filter:saturate(1.1) contrast(1.05) brightness(1.05)}}
+.veil{{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,7,3,.92) 0%,rgba(10,7,3,.74) 44%,rgba(10,7,3,.5) 100%),
+  linear-gradient(180deg,rgba(20,17,11,.5),rgba(10,6,2,.55))}}
+.in{{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:center;padding:40px 46px}}
+.k{{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:24px;letter-spacing:.28em;text-transform:uppercase;color:#EEE7D6}}
+.big{{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:74px;line-height:.92;letter-spacing:.02em;
+  text-transform:uppercase;color:#E9A72C;text-shadow:0 6px 30px rgba(0,0,0,.7)}}
+.price{{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:42px;color:#EEE7D6;margin-top:8px}}
+.price b{{color:#E9A72C}} .price small{{font-size:20px;color:#B7AC93}}
+.desc{{font-family:'Barlow',sans-serif;font-size:17px;color:#EEE7D6;margin-top:12px;max-width:420px;line-height:1.45}}
+.tag{{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.08em;text-transform:uppercase;
+  color:#E9A72C;margin-top:14px}}
+</style>
+<div class="stage">
+  <div class="photo"><img src="{du(FOTOS / ROCK_SRC, 'image/jpeg')}"></div><div class="veil"></div>
+  <div class="in">
+    <div class="k">Experiencia</div>
+    <div class="big">Rockstar</div>
+    <div class="price">Preventa <b>{ROCKSTAR_PRICE}</b><small> *</small></div>
+    <div class="desc">Acceso a la <b>Zona Rockstar</b>, manero exclusivo y lo mejor del festival — la forma premium de vivir el Oktoberfest.</div>
+    <div class="tag">+ Suma 10 ladrillos por experiencia</div>
+  </div>
+</div>"""
+
+
+def jarro_block(url):
+    return f"""<tr><td style="padding:22px 44px 8px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+        style="background:rgba(233,167,44,.06);border:1px solid rgba(233,167,44,.35);border-radius:14px;">
+        <tr>
+          <td width="44%" style="padding:14px 8px 14px 16px;"><img src="{url}" width="100%" alt="Jarro X Aniversario La Toma Cervecera"
+            style="display:block;width:100%;height:auto;border-radius:10px;border:0;"></td>
+          <td width="56%" style="padding:14px 20px 14px 10px;">
+            <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:24px;font-weight:700;letter-spacing:.04em;
+              text-transform:uppercase;color:#E9A72C;line-height:1.05;">El jarro<br>X Aniversario</div>
+            <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:16px;font-weight:600;color:#B7AC93;
+              letter-spacing:.1em;margin-top:4px;">2016 — 2026</div>
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.55;color:#EEE7D6;margin-top:10px;">
+              10 años celebrando la cultura cervecera. Llévate el <b>jarro conmemorativo</b> de la edición X — disponible con tu localidad Cervecero Pro + Jarro.</div>
+          </td>
+        </tr>
+      </table>
+    </td></tr>"""
+
+
 def feats_rows():
     out = []
     for x in FEATS:
@@ -150,7 +205,7 @@ def franja_ladrillos(sello_src):
     </td></tr>"""
 
 
-def email_html(hero_src, exp_src, bol_src, sello_src):
+def email_html(hero_src, exp_src, bol_src, sello_src, jarro_src, rock_src):
     return f"""<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -177,6 +232,8 @@ def email_html(hero_src, exp_src, bol_src, sello_src):
     {img_block(exp_src, "Todo esto te espera: +40 cervecerías, +200 cervezas por probar, artistas en vivo, gastronomía y experiencias inmersivas")}
     {img_block(bol_src, "Boletas a la venta: Cervecero Pro, Cervecero Pro + Jarro y De Parche")}
 
+    {jarro_block(jarro_src)}
+
     {franja_ladrillos(sello_src)}
 
     <tr><td style="padding:26px 44px 6px;text-align:center;">
@@ -184,22 +241,18 @@ def email_html(hero_src, exp_src, bol_src, sello_src):
         letter-spacing:.06em;text-transform:uppercase;">Sábado 24 de octubre · Centro de Eventos CESAP · Bogotá</div>
     </td></tr>
 
-    <tr><td style="padding:8px 44px 6px;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-        style="border:1px solid rgba(233,167,44,.55);border-radius:14px;background:rgba(233,167,44,.08);">
-        <tr><td style="padding:18px 24px;text-align:center;">
-          <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:23px;font-weight:700;
-            letter-spacing:.08em;text-transform:uppercase;color:#E9A72C;">Experiencia Rockstar</div>
-          <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:17px;color:#EEE7D6;margin-top:2px;">
-            Preventa <b style="color:#E9A72C;">{ROCKSTAR_PRICE}*</b> &nbsp;·&nbsp; suma <b>10 ladrillos</b> por experiencia</div>
-          <a href="{ROCKSTAR_URL}" target="_blank" style="display:inline-block;margin-top:10px;
-            font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:700;letter-spacing:.08em;
-            text-transform:uppercase;color:#E9A72C;text-decoration:underline;">Reservar la experiencia &#8594;</a>
-        </td></tr>
-      </table>
-    </td></tr>
+    <tr><td style="padding:16px 40px 6px;"><a href="{ROCKSTAR_URL}" target="_blank">
+      <img src="{rock_src}" width="600" alt="Experiencia Rockstar · Preventa {ROCKSTAR_PRICE} · Zona Rockstar · suma 10 ladrillos"
+        style="display:block;width:100%;max-width:600px;height:auto;border-radius:14px;border:0;"></a></td></tr>
+    <tr><td align="center" style="padding:8px 44px 4px;">
+      <table role="presentation" cellpadding="0" cellspacing="0" align="center"><tr>
+        <td align="center" bgcolor="#E9A72C" style="border-radius:999px;">
+          <a href="{ROCKSTAR_URL}" target="_blank" style="display:inline-block;padding:15px 40px;
+            font-family:'Barlow Condensed',Arial,sans-serif;font-size:20px;font-weight:700;letter-spacing:.08em;
+            text-transform:uppercase;color:#2A1B06;text-decoration:none;">Reservar la Experiencia Rockstar</a>
+        </td></tr></table></td></tr>
 
-    <tr><td align="center" style="padding:20px 44px 6px;">{btn("Comprar en Tuboleta")}</td></tr>
+    <tr><td align="center" style="padding:18px 44px 6px;border-top:1px solid rgba(255,255,255,.06);">{btn("Comprar boleta general")}</td></tr>
     <tr><td align="center" style="padding:6px 44px 4px;">
       <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:15px;font-weight:600;letter-spacing:.1em;
         text-transform:uppercase;color:#B7AC93;">en tuboleta.com</div></td></tr>
@@ -219,19 +272,24 @@ def email_html(hero_src, exp_src, bol_src, sello_src):
 
 
 def main():
+    import shutil
     # 1) hero
     hero_jpg = OUT / "email-hero.jpg"
     print("hero", render(HERO_HTML, 600, 640, hero_jpg, scale=2, cap_kb=300))
+    # banner Rockstar + jarro para hospedar
+    rock_jpg = OUT / "bog-rockstar.jpg"
+    print("rockstar", render(ROCKSTAR_HTML, 600, 430, rock_jpg, scale=2, cap_kb=260))
+    shutil.copy(WORK_AS / "jarro-email.jpg", OUT / "jarro-email.jpg")
     # 2) correo completo como imagen (imágenes embebidas)
     full_img = OUT / "email-oktoberfest-bogota.jpg"
     html_img = email_html(du(hero_jpg, "image/jpeg"),
                           du(CAMP / "carrusel-3-experiencias.jpg", "image/jpeg"),
                           du(CAMP / "carrusel-2-boleteria.jpg", "image/jpeg"),
-                          SELLO)
+                          SELLO, JARRO, du(rock_jpg, "image/jpeg"))
     # medir alto: render a ventana alta y recortar sólido inferior
     src = OUT / ".build.html"; png = OUT / ".build.png"; src.write_text(html_img, encoding="utf-8")
     subprocess.run([CHROME, "--headless=new", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
-                    "--force-device-scale-factor=2", "--window-size=624,3800",
+                    "--force-device-scale-factor=2", "--window-size=624,4600",
                     "--virtual-time-budget=8000", f"--screenshot={png}", src.as_uri()],
                    check=True, capture_output=True)
     im = Image.open(png).convert("RGB"); px = im.load()
@@ -247,7 +305,7 @@ def main():
     print("correo (imagen)", im.size, f"{full_img.stat().st_size/1024:.0f} KB")
     # 3) HTML enviable (imágenes por URL pública de GitHub raw)
     (OUT / "email-oktoberfest-bogota.html").write_text(
-        email_html(HERO_URL, IMG_EXP_URL, IMG_BOL_URL, SELLO_URL), encoding="utf-8")
+        email_html(HERO_URL, IMG_EXP_URL, IMG_BOL_URL, SELLO_URL, JARRO_URL, ROCK_URL), encoding="utf-8")
     print("HTML enviable escrito")
 
 
