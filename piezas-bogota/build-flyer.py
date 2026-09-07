@@ -45,7 +45,8 @@ CITIES = {
                    cerv="+40", sub="+200 cervezas por probar · artistas en vivo · gastronomía · experiencias inmersivas",
                    lineup=False, sponsors=["3cordilleras", "betplay"], handle="@oktoberfestartesanalbog", pulep="IZP513"),
 }
-FORMATS = [("post", 1080, 1350), ("historia", 1080, 1920), ("postal", 1200, 1800)]
+FORMATS = [("post", 1080, 1350), ("historia", 1080, 1920), ("postal", 1800, 1200)]  # postal = horizontal
+ONLY = ["medellin"]  # por ahora trabajamos solo con Medellín
 
 
 def page(key, cfg, fmt, w, h):
@@ -157,16 +158,93 @@ body{{font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased}} img{{
 </div>"""
 
 
+def page_h(key, cfg, w, h):
+    """Postal HORIZONTAL para imprimir (volante), con QR arriba a la derecha."""
+    hero = du(cfg["bg"], "image/jpeg")
+    ln = f'<div class="ln-h">{LINEUP[0]}</div>' + "".join(f'<div class="ln">{x}</div>' for x in LINEUP[1:]) if cfg["lineup"] else ""
+    spons = "".join(f'<img class="sp" src="{SP[n]}">' for n in cfg["sponsors"])
+    pulep = f'<div class="pulep">PULEP {cfg["pulep"]}</div>' if cfg["pulep"] else ""
+    return f"""<!doctype html><meta charset="utf-8"><title>Postal horizontal {cfg['city']}</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@800&display=swap');
+{FONTS_CSS}
+*{{margin:0;box-sizing:border-box}} html,body{{background:#000}}
+body{{font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased}} img{{display:block}}
+.stage{{position:relative;width:{w}px;height:{h}px;overflow:hidden;background:#14110B;color:#EEE7D6}}
+.photo{{position:absolute;inset:0}}
+.photo img{{width:100%;height:100%;object-fit:cover;object-position:center 42%;filter:saturate(1.1) contrast(1.03) brightness(1.05)}}
+.veil{{position:absolute;inset:0;background:
+  linear-gradient(180deg,rgba(12,9,5,.6) 0%,rgba(12,9,5,.34) 30%,rgba(10,6,2,.5) 70%,rgba(8,5,2,.94) 100%),
+  radial-gradient(120% 90% at 50% 42%,transparent 44%,rgba(8,5,2,.55) 100%)}}
+.in{{position:absolute;left:0;right:0;top:0;bottom:170px;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 90px 0}}
+.sello{{height:44px;opacity:.95;filter:drop-shadow(0 5px 18px rgba(0,0,0,.6))}}
+.brand{{width:360px;margin-top:12px;filter:drop-shadow(0 12px 30px rgba(0,0,0,.5))}}
+.city{{margin-top:10px;font-family:'Barlow Condensed';font-weight:700;font-size:84px;line-height:.9;letter-spacing:.05em;text-transform:uppercase;color:#E9A72C;text-shadow:0 6px 30px rgba(0,0,0,.6)}}
+.city span{{color:#EEE7D6}}
+.dp{{margin-top:8px;font-family:'Barlow Condensed';font-weight:600;font-size:30px;letter-spacing:.14em;text-transform:uppercase;color:#EEE7D6;text-shadow:0 3px 16px rgba(0,0,0,.9)}}
+.rule{{width:220px;height:2px;background:linear-gradient(90deg,transparent,#E9A72C,transparent);margin:18px 0 14px}}
+.stat{{display:flex;align-items:baseline;justify-content:center;gap:16px}}
+.stat b{{font-family:'Barlow Condensed';font-weight:700;font-size:100px;line-height:.85;color:#E9A72C;text-shadow:0 6px 30px rgba(0,0,0,.6)}}
+.stat u{{text-decoration:none;font-family:'Barlow Condensed';font-weight:700;font-size:44px;letter-spacing:.06em;text-transform:uppercase;color:#EEE7D6}}
+.sub{{margin-top:10px;font-family:'Barlow Condensed';font-weight:600;font-size:26px;letter-spacing:.05em;text-transform:uppercase;color:#EEE7D6;max-width:900px;line-height:1.32;text-shadow:0 3px 14px rgba(0,0,0,.9)}}
+.kk{{margin-top:22px;font-family:'Barlow Condensed';font-weight:600;font-size:22px;letter-spacing:.3em;text-transform:uppercase;color:#E9A72C}}
+.ln-h{{font-family:'Playfair Display',serif;font-weight:800;font-size:60px;line-height:.95;text-transform:uppercase;color:#EEE7D6;text-shadow:0 5px 24px rgba(0,0,0,.85);margin-top:4px}}
+.ln{{font-family:'Barlow Condensed';font-weight:700;font-size:30px;line-height:1.25;text-transform:uppercase;color:#EEE7D6;text-shadow:0 3px 14px rgba(0,0,0,.9)}}
+.venta{{margin-top:20px;font-family:'Barlow Condensed';font-weight:700;font-size:34px;letter-spacing:.14em;text-transform:uppercase;color:#E9A72C;text-shadow:0 3px 18px rgba(0,0,0,.85)}}
+/* QR arriba a la derecha */
+.qrc{{position:absolute;top:60px;right:60px;z-index:5;display:flex;align-items:center;gap:20px;background:#EEE7D6;border-radius:20px;padding:18px 24px;box-shadow:0 20px 50px -16px rgba(0,0,0,.75)}}
+.qrc img{{width:180px;height:180px;border-radius:8px;display:block}}
+.qrc .t{{font-family:'Barlow Condensed';font-weight:700;font-size:27px;line-height:1.06;text-transform:uppercase;color:#2A1B06;text-align:left}}
+.qrc .t small{{display:block;font-size:19px;color:#7a6a48;letter-spacing:.04em;margin-top:6px}}
+/* Footer barra inferior */
+.foot{{position:absolute;left:0;right:0;bottom:44px;z-index:4;display:flex;align-items:center;justify-content:center;gap:60px;flex-wrap:wrap}}
+.grp{{display:flex;flex-direction:column;align-items:center}}
+.lbl{{font-family:'Barlow Condensed';font-weight:600;font-size:17px;letter-spacing:.24em;text-transform:uppercase;color:#B7AC93;margin-bottom:10px}}
+.logos{{display:flex;align-items:center;gap:34px}}
+.org{{height:46px;opacity:.95}} .lt{{height:38px;opacity:.95}} .sp{{height:34px;opacity:.92}}
+.vsep{{width:1px;height:64px;background:rgba(255,255,255,.16)}}
+.handle{{position:absolute;left:0;right:0;bottom:14px;z-index:4;text-align:center;font-family:'Barlow Condensed';font-weight:600;font-size:18px;letter-spacing:.14em;text-transform:uppercase;color:#8a7f68}}
+.pulep{{position:absolute;left:40px;bottom:14px;z-index:5;font-family:'Barlow Condensed';font-weight:600;font-size:16px;letter-spacing:.16em;text-transform:uppercase;color:#EEE7D6;text-shadow:0 2px 12px rgba(0,0,0,.9)}}
+</style>
+<div class="stage">
+  <div class="photo"><img src="{hero}" alt=""></div><div class="veil"></div>
+  <div class="qrc"><img src="{QR[key]}"><div class="t">Escanea<br>y compra tus<br>boletas aquí<small>{cfg['platform']}</small></div></div>
+  <div class="in">
+    <img class="sello" src="{LATOMA}">
+    <img class="brand" src="{OKT}">
+    <div class="city">{cfg['city'].split()[0]} <span>2026</span></div>
+    <div class="dp">{cfg['date']} · {cfg['place']}</div>
+    <div class="rule"></div>
+    <div class="stat"><b>{cfg['cerv']}</b><u>Cervecerías artesanales</u></div>
+    <div class="sub">{cfg['sub']}</div>
+    <div class="kk">Line Up 2026</div>{ln}
+    <div class="venta">¡Boletas a la venta!</div>
+  </div>
+  <div class="foot">
+    <div class="grp"><div class="lbl">Organizan</div>
+      <div class="logos"><img class="org" src="{BE}"><img class="lt" src="{LATOMA}"></div></div>
+    <div class="vsep"></div>
+    <div class="grp"><div class="lbl">Con el apoyo de</div>
+      <div class="logos">{spons}</div></div>
+  </div>
+  <div class="handle">{cfg['handle']}</div>
+  {pulep}
+</div>"""
+
+
 def main():
     build = OUT / ".build"; build.mkdir(exist_ok=True)
     for key, cfg in CITIES.items():
+        if ONLY and key not in ONLY:
+            continue
         for fmt, w, h in FORMATS:
             postal = fmt == "postal"
             scale = 2 if postal else 1            # postal: doble resolución para impresión
             dpi = 300 if postal else 72
             cap = 3000 if postal else 500         # KB
             src = build / f"{key}-{fmt}.html"; png = build / f"{key}-{fmt}.png"; jpg = OUT / f"flyer-{key}-{fmt}.jpg"
-            src.write_text(page(key, cfg, fmt, w, h), encoding="utf-8")
+            html = page_h(key, cfg, w, h) if postal else page(key, cfg, fmt, w, h)
+            src.write_text(html, encoding="utf-8")
             subprocess.run([CHROME, "--headless=new", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
                             f"--force-device-scale-factor={scale}", f"--window-size={w},{h}",
                             "--virtual-time-budget=8000", f"--screenshot={png}", src.as_uri()], check=True, capture_output=True)
